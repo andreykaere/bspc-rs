@@ -1,14 +1,18 @@
 use std::error::Error;
 
-pub enum MonitorEvent {
+mod events;
+
+pub enum Subscription {
+    All,
+    Report,
+    Monitor,
+    Desktop,
+    Node,
     MonitorAdd,
     MonitorRename,
     MonitorSwap,
     MonitorFocus,
     MonitorGeometry,
-}
-
-pub enum DesktopEvent {
     DesktopAdd,
     DesktopRename,
     DesktopRemove,
@@ -17,9 +21,6 @@ pub enum DesktopEvent {
     DesktopFocus,
     DesktopActivate,
     DesktopLayout,
-}
-
-pub enum NodeEvent {
     NodeAdd,
     NodeRemove,
     NodeSwap,
@@ -34,15 +35,11 @@ pub enum NodeEvent {
     NodeLayer,
 }
 
-pub enum Event {
-    Report,
-    Monitor(MonitorEvent),
-    Dekstop(DesktopEvent),
-    Node(NodeEvent),
-    PointerAction,
-}
-
-pub fn subscribe(foo: i32, events: &[Event]) -> Result<(), Box<dyn Error>> {
+pub fn subscribe(
+    fifo: Option<()>,
+    count: Option<u32>,
+    subscriptions: &[Subscription],
+) -> Result<(), Box<dyn Error>> {
     todo!();
 }
 
