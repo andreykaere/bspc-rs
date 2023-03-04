@@ -1,46 +1,46 @@
-struct Geometry {
-    x: i32,
-    y: i32,
-    height: u32,
-    width: u32,
+pub struct Geometry {
+    pub x: i32,
+    pub y: i32,
+    pub height: u32,
+    pub width: u32,
 }
 
-enum Layout {
+pub enum Layout {
     Tiled,
     Monocle,
 }
 
-enum Dir {
+pub enum Dir {
     South,
     North,
     West,
     East,
 }
 
-enum Presel {
+pub enum Presel {
     Dir(Dir),
     Ratio(f32),
     Cancel,
 }
 
-enum Stack {
+pub enum Stack {
     Below,
     Above,
 }
 
-enum State {
+pub enum State {
     Tiled,
     PseudoTiled,
     Floating,
     Fullscreen,
 }
 
-enum Switch {
+pub enum Switch {
     On,
     Off,
 }
 
-enum Flag {
+pub enum Flag {
     Hidden,
     Sticky,
     Private,
@@ -49,51 +49,51 @@ enum Flag {
     Urgent,
 }
 
-enum Layer {
+pub enum Layer {
     Below,
     Normal,
     Above,
 }
 
-enum Action {
+pub enum Action {
     Move,
     ResizeCorner,
     ResizeSide,
 }
 
-enum ActionState {
+pub enum ActionState {
     Begin,
     End,
 }
 
 pub struct MonitorAddInfo {
-    monitor_id: i32,
-    monitor_name: String,
-    monitor_geometry: Geometry,
+    pub monitor_id: i32,
+    pub monitor_name: String,
+    pub monitor_geometry: Geometry,
 }
 
 pub struct MonitorRenameInfo {
-    monitor_id: i32,
-    old_name: String,
-    new_name: String,
+    pub monitor_id: i32,
+    pub old_name: String,
+    pub new_name: String,
 }
 
 pub struct MonitorRemoveInfo {
-    monitor_id: i32,
+    pub monitor_id: i32,
 }
 
 pub struct MonitorSwapInfo {
-    src_monitor_id: i32,
-    dst_monitor_id: i32,
+    pub src_monitor_id: i32,
+    pub dst_monitor_id: i32,
 }
 
 pub struct MonitorFocusInfo {
-    monitor_id: i32,
+    pub monitor_id: i32,
 }
 
 pub struct MonitorGeometryInfo {
-    monitor_id: i32,
-    monitor_geometry: Geometry,
+    pub monitor_id: i32,
+    pub monitor_geometry: Geometry,
 }
 
 pub enum MonitorEvent {
@@ -106,50 +106,50 @@ pub enum MonitorEvent {
 }
 
 pub struct DesktopAddInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    desktop_name: String,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub desktop_name: String,
 }
 
 pub struct DesktopRenameInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    old_name: String,
-    new_name: String,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub old_name: String,
+    pub new_name: String,
 }
 
 pub struct DesktopRemoveInfo {
-    monitor_id: i32,
-    desktop_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
 }
 
 pub struct DesktopSwapInfo {
-    src_monitor_id: i32,
-    src_desktop_id: i32,
-    dst_monitor_id: i32,
-    dst_desktop_id: i32,
+    pub src_monitor_id: i32,
+    pub src_desktop_id: i32,
+    pub dst_monitor_id: i32,
+    pub dst_desktop_id: i32,
 }
 
 pub struct DesktopTransferInfo {
-    src_monitor_id: i32,
-    src_desktop_id: i32,
-    dst_monitor_id: i32,
+    pub src_monitor_id: i32,
+    pub src_desktop_id: i32,
+    pub dst_monitor_id: i32,
 }
 
 pub struct DesktopFocusInfo {
-    monitor_id: i32,
-    desktop_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
 }
 
 pub struct DesktopActivateInfo {
-    monitor_id: i32,
-    desktop_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
 }
 
 pub struct DesktopLayoutInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    layout: Layout,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub layout: Layout,
 }
 
 pub enum DesktopEvent {
@@ -164,89 +164,89 @@ pub enum DesktopEvent {
 }
 
 pub struct NodeAddInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    ip_id: i32,
-    node_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub ip_id: i32,
+    pub node_id: i32,
 }
 
 pub struct NodeRemoveInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
 }
 
 pub struct NodeSwapInfo {
-    src_monitor_id: i32,
-    src_desktop_id: i32,
-    src_node_id: i32,
-    dst_monitor_id: i32,
-    dst_desktop_id: i32,
-    dst_node_id: i32,
+    pub src_monitor_id: i32,
+    pub src_desktop_id: i32,
+    pub src_node_id: i32,
+    pub dst_monitor_id: i32,
+    pub dst_desktop_id: i32,
+    pub dst_node_id: i32,
 }
 
 pub struct NodeTransferInfo {
-    src_monitor_id: i32,
-    src_desktop_id: i32,
-    src_node_id: i32,
-    dst_monitor_id: i32,
-    dst_desktop_id: i32,
-    dst_node_id: i32,
+    pub src_monitor_id: i32,
+    pub src_desktop_id: i32,
+    pub src_node_id: i32,
+    pub dst_monitor_id: i32,
+    pub dst_desktop_id: i32,
+    pub dst_node_id: i32,
 }
 
 pub struct NodeFocusInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
 }
 
 pub struct NodeActivateInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
 }
 
 pub struct NodePreselInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
-    presel: Presel,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
+    pub presel: Presel,
 }
 
 pub struct NodeStackInfo {
-    node_id_1: i32,
-    stack: Stack,
-    node_id_2: i32,
+    pub node_id_1: i32,
+    pub stack: Stack,
+    pub node_id_2: i32,
 }
 
 pub struct NodeGeometryInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
-    node_geometry: Geometry,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
+    pub node_geometry: Geometry,
 }
 
 pub struct NodeStateInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
-    state: State,
-    switch: Switch,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
+    pub state: State,
+    pub switch: Switch,
 }
 
 pub struct NodeFlagInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
-    flag: Flag,
-    switch: Switch,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
+    pub flag: Flag,
+    pub switch: Switch,
 }
 
 pub struct NodeLayerInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
-    layer: Layer,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
+    pub layer: Layer,
 }
 
 pub enum NodeEvent {
@@ -265,11 +265,11 @@ pub enum NodeEvent {
 }
 
 pub struct PointerActionInfo {
-    monitor_id: i32,
-    desktop_id: i32,
-    node_id: i32,
-    action: Action,
-    action_state: ActionState,
+    pub monitor_id: i32,
+    pub desktop_id: i32,
+    pub node_id: i32,
+    pub action: Action,
+    pub action_state: ActionState,
 }
 
 // TODO: implement it
