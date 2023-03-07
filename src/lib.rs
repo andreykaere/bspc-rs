@@ -1,5 +1,3 @@
-use std::error::Error;
-
 pub mod events;
 pub mod parser;
 
@@ -36,13 +34,13 @@ pub enum Subscription {
     NodeLayer,
 }
 
-pub fn subscribe(
-    fifo: Option<()>,
-    count: Option<u32>,
-    subscriptions: &[Subscription],
-) -> Result<(), Box<dyn Error>> {
-    todo!();
-}
+// pub fn subscribe(
+//     fifo: Option<()>,
+//     count: Option<u32>,
+//     subscriptions: &[Subscription],
+// ) -> Result<(), Box<dyn Error>> {
+//     todo!();
+// }
 
 // #[cfg(test)]
 // mod test {

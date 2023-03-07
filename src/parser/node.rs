@@ -1,46 +1,8 @@
-use core::fmt;
-use std::error::Error;
-use std::num::ParseIntError;
+use super::super::events::*;
+use super::errors::ParseError;
+use super::utils::from_hex;
+
 use std::str::FromStr;
-
-use super::events::*;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[non_exhaustive]
-pub enum ParseError {
-    InsufficientData,
-    InvalidEvent,
-    ConversionFailed,
-}
-
-impl Error for ParseError {}
-
-impl fmt::Display for ParseError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            ParseError::InsufficientData => {
-                write!(f, "Insufficient data was provided")
-            }
-            ParseError::InvalidEvent => {
-                write!(f, "Event of different type was provided")
-            }
-            ParseError::ConversionFailed => {
-                write!(f, "Conversion failed")
-            }
-        }
-    }
-}
-
-impl std::convert::From<ParseIntError> for ParseError {
-    fn from(value: ParseIntError) -> ParseError {
-        ParseError::ConversionFailed
-    }
-}
-
-fn from_hex(input: &str) -> Result<i32, ParseIntError> {
-    let without_prefix = input.trim_start_matches("0x");
-    i32::from_str_radix(without_prefix, 16)
-}
 
 impl FromStr for NodeAddInfo {
     type Err = ParseError;
@@ -206,14 +168,31 @@ impl FromStr for NodeActivateInfo {
 //     }
 // }
 
+impl FromStr for NodeStackInfo {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
+
+        if split[0] != "node_stack" {
+            return Err(ParseError::InvalidEvent);
+        }
+
+        if split.len() < 4 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        Ok(Self {
+            node_id_1: from_hex(split[1])?,
+            stack: split[2].parse()?,
+            node_id_2: from_hex(split[3])?,
+        })
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
-
-    #[test]
-    fn parse_hex() {
-        println!("{:?}", from_hex("00200002"));
-    }
 
     #[test]
     fn parse_node_add() {
