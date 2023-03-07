@@ -10,6 +10,10 @@ impl FromStr for NodeAddInfo {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
 
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
         if split[0] != "node_add" {
             return Err(ParseError::InvalidEvent);
         }
@@ -33,6 +37,10 @@ impl FromStr for NodeRemoveInfo {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
 
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
         if split[0] != "node_remove" {
             return Err(ParseError::InvalidEvent);
         }
@@ -54,6 +62,10 @@ impl FromStr for NodeSwapInfo {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
+
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
 
         if split[0] != "node_swap" {
             return Err(ParseError::InvalidEvent);
@@ -80,6 +92,10 @@ impl FromStr for NodeTransferInfo {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
 
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
         if split[0] != "node_transfer" {
             return Err(ParseError::InvalidEvent);
         }
@@ -105,6 +121,10 @@ impl FromStr for NodeFocusInfo {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
 
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
         if split[0] != "node_focus" {
             return Err(ParseError::InvalidEvent);
         }
@@ -127,6 +147,10 @@ impl FromStr for NodeActivateInfo {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
 
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
         if split[0] != "node_activate" {
             return Err(ParseError::InvalidEvent);
         }
@@ -148,6 +172,10 @@ impl FromStr for NodePreselInfo {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
+
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
 
         if split[0] != "node_presel" {
             return Err(ParseError::InvalidEvent);
@@ -172,6 +200,10 @@ impl FromStr for NodeStackInfo {
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         let split: Vec<_> = input.split(' ').collect();
 
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
         if split[0] != "node_stack" {
             return Err(ParseError::InvalidEvent);
         }
@@ -185,6 +217,138 @@ impl FromStr for NodeStackInfo {
             stack: split[2].parse()?,
             node_id_2: from_hex(split[3])?,
         })
+    }
+}
+
+impl FromStr for NodeLayerInfo {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
+
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        if split[0] != "node_layer" {
+            return Err(ParseError::InvalidEvent);
+        }
+
+        if split.len() < 5 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        Ok(Self {
+            monitor_id: from_hex(split[1])?,
+            desktop_id: from_hex(split[2])?,
+            node_id: from_hex(split[3])?,
+            layer: split[4].parse()?,
+        })
+    }
+}
+
+impl FromStr for NodeFlagInfo {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
+
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        if split[0] != "node_flag" {
+            return Err(ParseError::InvalidEvent);
+        }
+
+        if split.len() < 6 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        Ok(Self {
+            monitor_id: from_hex(split[1])?,
+            desktop_id: from_hex(split[2])?,
+            node_id: from_hex(split[3])?,
+            flag: split[4].parse()?,
+            switch: split[5].parse()?,
+        })
+    }
+}
+
+impl FromStr for NodeStateInfo {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
+
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        if split[0] != "node_state" {
+            return Err(ParseError::InvalidEvent);
+        }
+
+        if split.len() < 6 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        Ok(Self {
+            monitor_id: from_hex(split[1])?,
+            desktop_id: from_hex(split[2])?,
+            node_id: from_hex(split[3])?,
+            state: split[4].parse()?,
+            switch: split[5].parse()?,
+        })
+    }
+}
+
+impl FromStr for NodeGeometryInfo {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
+
+        if split.len() == 0 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        if split[0] != "node_geometry" {
+            return Err(ParseError::InvalidEvent);
+        }
+
+        if split.len() < 5 {
+            return Err(ParseError::InsufficientData);
+        }
+
+        Ok(Self {
+            monitor_id: from_hex(split[1])?,
+            desktop_id: from_hex(split[2])?,
+            node_id: from_hex(split[3])?,
+            node_geometry: split[4].parse()?,
+        })
+    }
+}
+
+impl FromStr for NodeEvent {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
+
+        match split[0] {
+            "node_add" => Ok(NodeEvent::NodeAdd(input.parse()?)),
+            "node_remove" => Ok(NodeEvent::NodeRemove(input.parse()?)),
+            "node_swap" => Ok(NodeEvent::NodeSwap(input.parse()?)),
+            "node_activate" => Ok(NodeEvent::NodeActivate(input.parse()?)),
+            "node_presel" => Ok(NodeEvent::NodePresel(input.parse()?)),
+            "node_stack" => Ok(NodeEvent::NodeStack(input.parse()?)),
+            "node_geometry" => Ok(NodeEvent::NodeGeometry(input.parse()?)),
+            "node_state" => Ok(NodeEvent::NodeState(input.parse()?)),
+            "node_flag" => Ok(NodeEvent::NodeFlag(input.parse()?)),
+            "node_layer" => Ok(NodeEvent::NodeLayer(input.parse()?)),
+            _ => Err(ParseError::ConversionFailed),
+        }
     }
 }
 
