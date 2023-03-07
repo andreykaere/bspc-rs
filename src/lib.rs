@@ -1,46 +1,52 @@
-pub mod events;
-pub mod parser;
+use std::env;
+use std::io;
+use std::os::unix::net::UnixStream;
 
-pub enum Subscription {
-    All,
-    Report,
-    Monitor,
-    Desktop,
-    Node,
-    MonitorAdd,
-    MonitorRename,
-    MonitorSwap,
-    MonitorFocus,
-    MonitorGeometry,
-    DesktopAdd,
-    DesktopRename,
-    DesktopRemove,
-    DesktopSwap,
-    DesktopTransfer,
-    DesktopFocus,
-    DesktopActivate,
-    DesktopLayout,
-    NodeAdd,
-    NodeRemove,
-    NodeSwap,
-    NodeTransfer,
-    NodeFocus,
-    NodeActivate,
-    NodePresel,
-    NodeStack,
-    NodeGeometry,
-    NodeState,
-    NodeFlag,
-    NodeLayer,
+pub mod events;
+mod parser;
+
+use events::Subscription;
+
+pub struct BspwmConnection {
+    stream: UnixStream,
 }
 
-// pub fn subscribe(
-//     fifo: Option<()>,
-//     count: Option<u32>,
-//     subscriptions: &[Subscription],
-// ) -> Result<(), Box<dyn Error>> {
-//     todo!();
-// }
+pub struct EventIterator<'a> {
+    stream: &'a mut UnixStream,
+}
+
+fn locate_socket() -> String {
+    if let Ok(path) = env::var("BSPWM_SOCKET") {
+        path
+    } else {
+        // Examination of the source code has shown that despite man page
+        // saying that socket path depends on DISPLAY or other parameters, in
+        // fact it always initializing it as presented below
+        "/tmp/bspwm_0_0-socket".to_string()
+    }
+}
+
+impl BspwmConnection {
+    pub fn connect() -> io::Result<BspwmConnection> {
+        let socket_path = locate_socket();
+        let stream = UnixStream::connect(socket_path)?;
+
+        Ok(Self { stream })
+    }
+
+    pub fn subscribe(
+        &mut self,
+        fifo: Option<()>,
+        count: Option<u32>,
+        subscriptions: &[Subscription],
+    ) -> io::Result<()> {
+        todo!();
+    }
+
+    pub fn listen(&mut self) -> EventIterator {
+        todo!();
+    }
+}
 
 #[cfg(test)]
 mod test {

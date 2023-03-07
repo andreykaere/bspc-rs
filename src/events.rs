@@ -1,4 +1,39 @@
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
+pub enum Subscription {
+    All,
+    Report,
+    Monitor,
+    Desktop,
+    Node,
+    MonitorAdd,
+    MonitorRename,
+    MonitorSwap,
+    MonitorFocus,
+    MonitorGeometry,
+    DesktopAdd,
+    DesktopRename,
+    DesktopRemove,
+    DesktopSwap,
+    DesktopTransfer,
+    DesktopFocus,
+    DesktopActivate,
+    DesktopLayout,
+    NodeAdd,
+    NodeRemove,
+    NodeSwap,
+    NodeTransfer,
+    NodeFocus,
+    NodeActivate,
+    NodePresel,
+    NodeStack,
+    NodeGeometry,
+    NodeState,
+    NodeFlag,
+    NodeLayer,
+    PointerAction,
+}
+
+#[derive(Debug)]
 pub struct Geometry {
     pub x: i32,
     pub y: i32,
@@ -6,13 +41,13 @@ pub struct Geometry {
     pub width: u32,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Layout {
     Tiled,
     Monocle,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Dir {
     South,
     North,
@@ -20,20 +55,20 @@ pub enum Dir {
     East,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 pub enum Presel {
     Dir(Dir),
     Ratio(f32),
     Cancel,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Stack {
     Below,
     Above,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum State {
     Tiled,
     PseudoTiled,
@@ -41,13 +76,13 @@ pub enum State {
     Fullscreen,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Switch {
     On,
     Off,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Flag {
     Hidden,
     Sticky,
@@ -57,63 +92,63 @@ pub enum Flag {
     Urgent,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Layer {
     Below,
     Normal,
     Above,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum Action {
     Move,
     ResizeCorner,
     ResizeSide,
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Debug)]
 pub enum ActionState {
     Begin,
     End,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct MonitorAddInfo {
     pub monitor_id: i32,
     pub monitor_name: String,
     pub monitor_geometry: Geometry,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct MonitorRenameInfo {
     pub monitor_id: i32,
     pub old_name: String,
     pub new_name: String,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct MonitorRemoveInfo {
     pub monitor_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct MonitorSwapInfo {
     pub src_monitor_id: i32,
     pub dst_monitor_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct MonitorFocusInfo {
     pub monitor_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct MonitorGeometryInfo {
     pub monitor_id: i32,
     pub monitor_geometry: Geometry,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum MonitorEvent {
     MonitorAdd(MonitorAddInfo),
     MonitorRename(MonitorRenameInfo),
@@ -123,14 +158,14 @@ pub enum MonitorEvent {
     MonitorGeometry(MonitorGeometryInfo),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct DesktopAddInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
     pub desktop_name: String,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct DesktopRenameInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -138,13 +173,13 @@ pub struct DesktopRenameInfo {
     pub new_name: String,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DesktopRemoveInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DesktopSwapInfo {
     pub src_monitor_id: i32,
     pub src_desktop_id: i32,
@@ -152,33 +187,33 @@ pub struct DesktopSwapInfo {
     pub dst_desktop_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DesktopTransferInfo {
     pub src_monitor_id: i32,
     pub src_desktop_id: i32,
     pub dst_monitor_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DesktopFocusInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DesktopActivateInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct DesktopLayoutInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
     pub layout: Layout,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum DesktopEvent {
     DesktopAdd(DesktopAddInfo),
     DesktopRename(DesktopRenameInfo),
@@ -190,7 +225,7 @@ pub enum DesktopEvent {
     DesktopLayout(DesktopLayoutInfo),
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeAddInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -198,14 +233,14 @@ pub struct NodeAddInfo {
     pub node_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeRemoveInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
     pub node_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeSwapInfo {
     pub src_monitor_id: i32,
     pub src_desktop_id: i32,
@@ -215,7 +250,7 @@ pub struct NodeSwapInfo {
     pub dst_node_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeTransferInfo {
     pub src_monitor_id: i32,
     pub src_desktop_id: i32,
@@ -225,21 +260,21 @@ pub struct NodeTransferInfo {
     pub dst_node_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeFocusInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
     pub node_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeActivateInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
     pub node_id: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodePreselInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -247,14 +282,14 @@ pub struct NodePreselInfo {
     pub presel: Presel,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeStackInfo {
     pub node_id_1: i32,
     pub stack: Stack,
     pub node_id_2: i32,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeGeometryInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -262,7 +297,7 @@ pub struct NodeGeometryInfo {
     pub node_geometry: Geometry,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeStateInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -271,7 +306,7 @@ pub struct NodeStateInfo {
     pub switch: Switch,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeFlagInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -280,7 +315,7 @@ pub struct NodeFlagInfo {
     pub switch: Switch,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct NodeLayerInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -288,7 +323,7 @@ pub struct NodeLayerInfo {
     pub layer: Layer,
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub enum NodeEvent {
     NodeAdd(NodeAddInfo),
     NodeRemove(NodeRemoveInfo),
@@ -304,7 +339,7 @@ pub enum NodeEvent {
     NodeLayer(NodeLayerInfo),
 }
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct PointerActionInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
@@ -313,11 +348,11 @@ pub struct PointerActionInfo {
     pub action_state: ActionState,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 // TODO: implement it
 pub struct ReportInfo {}
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum Event {
     Report(ReportInfo),
     Monitor(MonitorEvent),

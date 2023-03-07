@@ -1,19 +1,19 @@
 use super::errors::ParseError;
 use std::num::ParseIntError;
 
-pub fn from_hex(input: &str) -> Result<i32, ParseIntError> {
+pub(super) fn from_hex(input: &str) -> Result<i32, ParseIntError> {
     let without_prefix = input.trim_start_matches("0x");
     i32::from_str_radix(without_prefix, 16)
 }
 
-pub fn process_event_reply<'a>(
+pub(super) fn process_event_reply<'a>(
     reply: &'a str,
     event: &str,
     arg_num: usize,
 ) -> Result<Vec<&'a str>, ParseError> {
     let split: Vec<_> = reply.trim().split(' ').collect();
 
-    if split.len() == 0 {
+    if split.is_empty() {
         return Err(ParseError::InsufficientData);
     }
 
@@ -28,10 +28,10 @@ pub fn process_event_reply<'a>(
     Ok(split)
 }
 
-pub fn get_event_type(reply: &str) -> Result<&str, ParseError> {
+pub(super) fn get_event_type(reply: &str) -> Result<&str, ParseError> {
     let split: Vec<_> = reply.trim().split(' ').collect();
 
-    if split.len() == 0 {
+    if split.is_empty() {
         return Err(ParseError::InsufficientData);
     }
 
