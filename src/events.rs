@@ -313,9 +313,11 @@ pub struct PointerActionInfo {
     pub action_state: ActionState,
 }
 
+#[derive(Debug, Clone)]
 // TODO: implement it
 pub struct ReportInfo {}
 
+#[derive(Debug, Clone)]
 pub enum Event {
     Report(ReportInfo),
     Monitor(MonitorEvent),
