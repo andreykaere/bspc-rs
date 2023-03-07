@@ -143,30 +143,28 @@ impl FromStr for NodeActivateInfo {
     }
 }
 
-// impl FromStr for NodePreselInfo {
-//     type Err = ParseError;
+impl FromStr for NodePreselInfo {
+    type Err = ParseError;
 
-//     fn from_str(input: &str) -> Result<Self, Self::Err> {
-//         let split: Vec<_> = input.split(' ').collect();
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(' ').collect();
 
-//         if split[0] != "node_presel" {
-//             return Err(ParseError::InvalidEvent);
-//         }
+        if split[0] != "node_presel" {
+            return Err(ParseError::InvalidEvent);
+        }
 
-//         if split.len() < 5 {
-//             return Err(ParseError::InsufficientData);
-//         }
+        if split.len() < 5 {
+            return Err(ParseError::InsufficientData);
+        }
 
-//         let presel = Presel;
-
-//         Ok(Self {
-//             monitor_id: from_hex(split[1])?,
-//             desktop_id: from_hex(split[2])?,
-//             node_id: from_hex(split[3])?,
-//             presel,
-//         })
-//     }
-// }
+        Ok(Self {
+            monitor_id: from_hex(split[1])?,
+            desktop_id: from_hex(split[2])?,
+            node_id: from_hex(split[3])?,
+            presel: split[4].parse()?,
+        })
+    }
+}
 
 impl FromStr for NodeStackInfo {
     type Err = ParseError;

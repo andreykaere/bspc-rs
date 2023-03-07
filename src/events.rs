@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Geometry {
     pub x: i32,
     pub y: i32,
@@ -6,13 +6,13 @@ pub struct Geometry {
     pub width: u32,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Layout {
     Tiled,
     Monocle,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Dir {
     South,
     North,
@@ -27,13 +27,13 @@ pub enum Presel {
     Cancel,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Stack {
     Below,
     Above,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum State {
     Tiled,
     PseudoTiled,
@@ -41,13 +41,13 @@ pub enum State {
     Fullscreen,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Switch {
     On,
     Off,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Flag {
     Hidden,
     Sticky,
@@ -57,21 +57,21 @@ pub enum Flag {
     Urgent,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Layer {
     Below,
     Normal,
     Above,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Action {
     Move,
     ResizeCorner,
     ResizeSide,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum ActionState {
     Begin,
     End,
