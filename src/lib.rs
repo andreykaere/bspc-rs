@@ -4,8 +4,10 @@ use std::os::unix::net::UnixStream;
 
 pub mod events;
 mod parser;
+pub mod tree;
 
 use events::Subscription;
+use tree::Tree;
 
 pub struct BspwmConnection {
     stream: UnixStream,
@@ -44,6 +46,10 @@ impl BspwmConnection {
     }
 
     pub fn listen(&mut self) -> EventIterator {
+        todo!();
+    }
+
+    pub fn get_tree(&mut self) -> Tree {
         todo!();
     }
 }
