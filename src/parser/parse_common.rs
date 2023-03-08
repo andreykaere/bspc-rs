@@ -1,4 +1,4 @@
-use super::super::events::*;
+use super::super::common::*;
 use super::errors::ParseError;
 
 use std::str::FromStr;
@@ -136,7 +136,7 @@ impl FromStr for Presel {
     }
 }
 
-impl FromStr for Geometry {
+impl FromStr for Rectangle {
     type Err = ParseError;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {

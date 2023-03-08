@@ -1,3 +1,5 @@
+use super::common::*;
+
 #[derive(Debug)]
 pub enum Subscription {
     All,
@@ -34,89 +36,10 @@ pub enum Subscription {
 }
 
 #[derive(Debug)]
-pub struct Geometry {
-    pub x: i32,
-    pub y: i32,
-    pub height: u32,
-    pub width: u32,
-}
-
-#[derive(Debug)]
-pub enum Layout {
-    Tiled,
-    Monocle,
-}
-
-#[derive(Debug)]
-pub enum Dir {
-    South,
-    North,
-    West,
-    East,
-}
-
-#[derive(Debug)]
-pub enum Presel {
-    Dir(Dir),
-    Ratio(f32),
-    Cancel,
-}
-
-#[derive(Debug)]
-pub enum Stack {
-    Below,
-    Above,
-}
-
-#[derive(Debug)]
-pub enum State {
-    Tiled,
-    PseudoTiled,
-    Floating,
-    Fullscreen,
-}
-
-#[derive(Debug)]
-pub enum Switch {
-    On,
-    Off,
-}
-
-#[derive(Debug)]
-pub enum Flag {
-    Hidden,
-    Sticky,
-    Private,
-    Locked,
-    Marked,
-    Urgent,
-}
-
-#[derive(Debug)]
-pub enum Layer {
-    Below,
-    Normal,
-    Above,
-}
-
-#[derive(Debug)]
-pub enum Action {
-    Move,
-    ResizeCorner,
-    ResizeSide,
-}
-
-#[derive(Debug)]
-pub enum ActionState {
-    Begin,
-    End,
-}
-
-#[derive(Debug)]
 pub struct MonitorAddInfo {
     pub monitor_id: i32,
     pub monitor_name: String,
-    pub monitor_geometry: Geometry,
+    pub monitor_geometry: Rectangle,
 }
 
 #[derive(Debug)]
@@ -145,7 +68,7 @@ pub struct MonitorFocusInfo {
 #[derive(Debug)]
 pub struct MonitorGeometryInfo {
     pub monitor_id: i32,
-    pub monitor_geometry: Geometry,
+    pub monitor_geometry: Rectangle,
 }
 
 #[derive(Debug)]
@@ -294,7 +217,7 @@ pub struct NodeGeometryInfo {
     pub monitor_id: i32,
     pub desktop_id: i32,
     pub node_id: i32,
-    pub node_geometry: Geometry,
+    pub node_geometry: Rectangle,
 }
 
 #[derive(Debug)]

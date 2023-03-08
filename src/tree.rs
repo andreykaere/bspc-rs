@@ -1,15 +1,9 @@
-use super::events::{Dir, Layer, Layout, State};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Debug)]
-pub struct Rectangle {
-    pub x: i32,
-    pub y: i32,
-    pub width: i32,
-    pub height: i32,
-}
+use super::common::{Dir, Layer, Layout, Rectangle, State};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {
     pub top: i32,
     pub right: i32,
@@ -17,17 +11,19 @@ pub struct Padding {
     pub left: i32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum SplitType {
     Vertical,
     Horizontal,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Client {
     pub class_name: String,
     pub instance_name: String,
-    pub border_with: i32,
+    pub border_width: i32,
     pub state: State,
     pub last_state: State,
     pub layer: Layer,
@@ -38,23 +34,25 @@ pub struct Client {
     pub floating_rectangle: Rectangle,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Constraints {
     pub min_width: i32,
     pub min_height: i32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PreselNode {
     pub split_dir: Dir,
-    pub split_ration: f32,
+    pub split_ratio: f32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Node {
     pub id: i32,
     pub split_type: SplitType,
-    pub split_ration: f32,
+    pub split_ratio: f32,
     pub vacant: bool,
     pub hidden: bool,
     pub sticky: bool,
@@ -66,10 +64,11 @@ pub struct Node {
     pub constraints: Constraints,
     pub first_child: Option<Box<Node>>,
     pub second_child: Option<Box<Node>>,
-    pub client: Client,
+    pub client: Option<Client>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Desktop {
     pub name: String,
     pub id: i32,
@@ -80,7 +79,8 @@ pub struct Desktop {
     pub root: Option<Node>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Monitor {
     pub name: String,
     pub id: i32,
@@ -88,13 +88,20 @@ pub struct Monitor {
     pub wired: bool,
     pub sticky_count: i32,
     pub window_gap: i32,
-    pub border_with: i32,
+    pub border_width: i32,
     pub focused_desktop_id: i32,
     pub padding: Padding,
     pub rectangle: Rectangle,
+    pub desktops: Vec<Desktop>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Tree {
-    pub monitors: HashMap<String, Monitor>,
+    #[serde(flatten)]
+    pub monitor: Monitor,
+    // pub tree: HashMap<String, Monitor>,
 }
+
+// pub struct Tree {
+//     // Think of different name or way to organize this
+// }

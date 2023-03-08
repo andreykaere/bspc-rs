@@ -2,6 +2,7 @@ use std::env;
 use std::io;
 use std::os::unix::net::UnixStream;
 
+pub mod common;
 pub mod events;
 mod parser;
 pub mod tree;
