@@ -16,6 +16,7 @@ pub enum Layout {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum Dir {
     South,
     North,

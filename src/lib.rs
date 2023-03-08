@@ -29,6 +29,18 @@ fn locate_socket() -> String {
     }
 }
 
+pub enum QueryOptions {
+    Monitor,
+    Desktop,
+    Node,
+}
+
+pub enum QuerySelectors {
+    // Monitor(MonitorSelector),
+    // Desktop(DesktopSelector),
+    // Node(NodeSelector),
+}
+
 impl BspwmConnection {
     pub fn connect() -> io::Result<BspwmConnection> {
         let socket_path = locate_socket();
@@ -50,7 +62,23 @@ impl BspwmConnection {
         todo!();
     }
 
-    pub fn get_tree(&mut self) -> Tree {
+    pub fn query_nodes(&mut self) -> Vec<i32> {
+        todo!();
+    }
+
+    pub fn query_desktops(&mut self) -> Vec<i32> {
+        todo!();
+    }
+
+    pub fn query_monitors(&mut self) -> Vec<i32> {
+        todo!();
+    }
+
+    pub fn query_tree(
+        &mut self,
+        opts: QueryOptions,
+        sel: QuerySelectors,
+    ) -> Tree {
         todo!();
     }
 }

@@ -39,3 +39,9 @@ impl std::convert::From<ParseFloatError> for ParseError {
         ParseError::ConversionFailed
     }
 }
+
+impl std::convert::From<serde_json::Error> for ParseError {
+    fn from(_: serde_json::Error) -> ParseError {
+        ParseError::ConversionFailed
+    }
+}

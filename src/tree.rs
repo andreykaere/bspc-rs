@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 use super::common::{Dir, Layer, Layout, Rectangle, State};
 
@@ -95,13 +94,29 @@ pub struct Monitor {
     pub desktops: Vec<Desktop>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Tree {
-    #[serde(flatten)]
-    pub monitor: Monitor,
-    // pub tree: HashMap<String, Monitor>,
+#[derive(Debug)]
+pub enum Tree {
+    Node(Node),
+    Desktop(Desktop),
+    Monitor(Monitor),
 }
 
-// pub struct Tree {
-//     // Think of different name or way to organize this
-// }
+#[cfg(test)]
+mod test {
+    use super::*;
+    use std::process::Command;
+
+    #[test]
+    fn parse_tree() {
+        let monitor = Command::new("bspc")
+            .arg("query")
+            .arg("-T")
+            .arg("-m")
+            .output()
+            .unwrap();
+        let monitor = std::str::from_utf8(&monitor.stdout).unwrap();
+        let monitor: Monitor = serde_json::from_str(monitor).unwrap();
+
+        println!("{:#?}", monitor);
+    }
+}
