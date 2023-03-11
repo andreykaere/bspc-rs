@@ -1,41 +1,42 @@
-use super::events::*;
+use super::errors::ParseError;
+use crate::properties::*;
 
 use std::str::FromStr;
 
-pub mod desktop_events;
 pub mod errors;
-pub mod monitor_events;
-pub mod node_events;
-pub mod parse_common;
+pub mod parse_events;
 mod utils;
 
-use errors::ParseError;
-use utils::{from_hex, get_event_type, process_event_reply};
-
-impl FromStr for Event {
+impl FromStr for Presel {
     type Err = ParseError;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
-        if let Ok(x) = input.parse::<NodeEvent>() {
-            return Ok(Event::Node(x));
+        let split: Vec<_> = input.split(' ').collect();
+
+        match split[0] {
+            "dir" => Ok(Self::Dir(split[1].parse()?)),
+            "ratio" => Ok(Self::Ratio(split[1].parse()?)),
+            "cancel" => Ok(Self::Cancel),
+            _ => Err(ParseError::ConversionFailed),
+        }
+    }
+}
+
+impl FromStr for Rectangle {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let split: Vec<_> = input.split(&['+', 'x'][..]).collect();
+
+        if split.len() < 4 {
+            return Err(ParseError::InsufficientData);
         }
 
-        if let Ok(x) = input.parse::<DesktopEvent>() {
-            return Ok(Event::Desktop(x));
-        }
-
-        if let Ok(x) = input.parse::<MonitorEvent>() {
-            return Ok(Event::Monitor(x));
-        }
-
-        // if let Ok(x) = input.parse::<ReportInfo>() {
-        //     return Ok(Event::Report(x));
-        // }
-
-        // if let Ok(x) = input.parse::<PointerActionInfo>() {
-        //     return Ok(Event::PointerAction(x));
-        // }
-
-        Err(ParseError::ConversionFailed)
+        Ok(Self {
+            width: split[0].parse()?,
+            height: split[1].parse()?,
+            x: split[2].parse()?,
+            y: split[3].parse()?,
+        })
     }
 }

@@ -1,4 +1,6 @@
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
+use strum_macros::EnumString;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Rectangle {
@@ -8,15 +10,17 @@ pub struct Rectangle {
     pub height: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, EnumString, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[strum(serialize_all = "snake_case")]
 pub enum Layout {
     Tiled,
     Monocle,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, EnumString, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[strum(serialize_all = "snake_case")]
 pub enum Dir {
     South,
     North,
@@ -31,14 +35,16 @@ pub enum Presel {
     Cancel,
 }
 
-#[derive(Debug)]
+#[derive(Debug, EnumString)]
+#[strum(serialize_all = "snake_case")]
 pub enum Stack {
     Below,
     Above,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "camelCase")]
+#[strum(serialize_all = "snake_case")]
 pub enum State {
     Tiled,
     PseudoTiled,
@@ -46,14 +52,16 @@ pub enum State {
     Fullscreen,
 }
 
-#[derive(Debug)]
+#[derive(Debug, EnumString)]
+#[strum(serialize_all = "snake_case")]
 pub enum Switch {
     On,
     Off,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "camelCase")]
+#[strum(serialize_all = "snake_case")]
 pub enum Flag {
     Hidden,
     Sticky,
@@ -63,22 +71,25 @@ pub enum Flag {
     Urgent,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, EnumString)]
 #[serde(rename_all = "camelCase")]
+#[strum(serialize_all = "snake_case")]
 pub enum Layer {
     Below,
     Normal,
     Above,
 }
 
-#[derive(Debug)]
+#[derive(Debug, EnumString)]
+#[strum(serialize_all = "snake_case")]
 pub enum Action {
     Move,
     ResizeCorner,
     ResizeSide,
 }
 
-#[derive(Debug)]
+#[derive(Debug, EnumString)]
+#[strum(serialize_all = "snake_case")]
 pub enum ActionState {
     Begin,
     End,

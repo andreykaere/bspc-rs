@@ -45,3 +45,9 @@ impl std::convert::From<serde_json::Error> for ParseError {
         ParseError::ConversionFailed
     }
 }
+
+impl std::convert::From<strum::ParseError> for ParseError {
+    fn from(_error: strum::ParseError) -> ParseError {
+        ParseError::ConversionFailed
+    }
+}

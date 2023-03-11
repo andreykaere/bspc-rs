@@ -1,8 +1,4 @@
-use super::super::events::*;
-use super::errors::ParseError;
-use super::utils::{from_hex, get_event_type, process_event_reply};
-
-use std::str::FromStr;
+use super::*;
 
 impl FromStr for MonitorAddInfo {
     type Err = ParseError;
@@ -89,18 +85,15 @@ impl FromStr for MonitorEvent {
         let event_type = get_event_type(input)?;
 
         match event_type {
-            // "node_add" => Ok(NodeEvent::NodeAdd(input.parse()?)),
-            // "node_remove" => Ok(NodeEvent::NodeRemove(input.parse()?)),
-            // "node_swap" => Ok(NodeEvent::NodeSwap(input.parse()?)),
-            // "node_transfer" => Ok(NodeEvent::NodeTransfer(input.parse()?)),
-            // "node_focus" => Ok(NodeEvent::NodeFocus(input.parse()?)),
-            // "node_activate" => Ok(NodeEvent::NodeActivate(input.parse()?)),
-            // "node_presel" => Ok(NodeEvent::NodePresel(input.parse()?)),
-            // "node_stack" => Ok(NodeEvent::NodeStack(input.parse()?)),
-            // "node_geometry" => Ok(NodeEvent::NodeGeometry(input.parse()?)),
-            // "node_state" => Ok(NodeEvent::NodeState(input.parse()?)),
-            // "node_flag" => Ok(NodeEvent::NodeFlag(input.parse()?)),
-            // "node_layer" => Ok(NodeEvent::NodeLayer(input.parse()?)),
+            "monitor_add" => Ok(MonitorEvent::MonitorAdd(input.parse()?)),
+            "monitor_rename" => Ok(MonitorEvent::MonitorRename(input.parse()?)),
+            "monitor_remove" => Ok(MonitorEvent::MonitorRemove(input.parse()?)),
+            "monitor_swap" => Ok(MonitorEvent::MonitorSwap(input.parse()?)),
+            "monitor_focus" => Ok(MonitorEvent::MonitorFocus(input.parse()?)),
+            "monitor_geometry" => {
+                Ok(MonitorEvent::MonitorGeometry(input.parse()?))
+            }
+
             _ => Err(ParseError::ConversionFailed),
         }
     }

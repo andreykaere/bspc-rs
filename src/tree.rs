@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::common::{Dir, Layer, Layout, Rectangle, State};
+use super::properties::{Dir, Layer, Layout, Rectangle, State};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {

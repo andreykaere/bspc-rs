@@ -3,8 +3,8 @@ use std::os::unix::net::UnixStream;
 use std::string::ToString;
 use strum_macros::Display;
 
-use super::common::*;
-use super::errors::ReplyError;
+use super::errors::{ParseError, ReplyError};
+use super::properties::*;
 use super::BspcCommunication;
 
 #[derive(Display, Debug)]
@@ -294,6 +294,9 @@ pub enum Event {
 
 pub struct EventIterator<'a> {
     pub(super) stream: &'a mut UnixStream,
+
+    /// This is needed if by one `read` we obtain more, than one events.
+    /// Whenever it happens, we push these back and take one from the front.
     pub(super) cache: VecDeque<Result<Event, ReplyError>>,
 }
 
@@ -316,8 +319,12 @@ impl<'a> Iterator for EventIterator<'a> {
                 }
 
                 self.cache.append(&mut new_cache);
-
-                self.cache.pop_front()
+                match self.cache.pop_front() {
+                    Some(x) => Some(x),
+                    None => Some(Err(ReplyError::ParseError(
+                        ParseError::InsufficientData,
+                    ))),
+                }
             }
 
             Err(e) => Some(Err(e)),

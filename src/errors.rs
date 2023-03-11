@@ -3,7 +3,7 @@ use std::error::Error;
 use std::io;
 use std::os::unix::net::UnixStream;
 
-pub use super::parser::errors::*;
+pub use crate::parser::errors::*;
 
 #[derive(Debug)]
 pub enum ReplyError {
@@ -15,7 +15,10 @@ impl Error for ReplyError {}
 
 impl fmt::Display for ReplyError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Display::fmt(self, f)
+        match self {
+            ReplyError::ConnectionError(err) => err.fmt(f),
+            ReplyError::ParseError(err) => err.fmt(f),
+        }
     }
 }
 

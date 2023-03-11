@@ -3,10 +3,10 @@ use std::env;
 use std::io::{self, Read, Write};
 use std::os::unix::net::UnixStream;
 
-pub mod common;
 pub mod errors;
 pub mod events;
 mod parser;
+pub mod properties;
 pub mod tree;
 
 use errors::{ParseError, ReplyError};
@@ -138,7 +138,8 @@ mod test {
     #[test]
     fn test_iterator() {
         let mut conn = BspwmConnection::connect().unwrap();
-        let subscriptions = vec![Subscription::Node];
+        // let subscriptions = vec![Subscription::Desktop];
+        let subscriptions = vec![Subscription::Desktop, Subscription::Node];
         conn.subscribe(None, None, &subscriptions);
 
         for event in conn.listen() {

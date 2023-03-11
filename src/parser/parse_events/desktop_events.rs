@@ -1,8 +1,4 @@
-use super::super::events::*;
-use super::errors::ParseError;
-use super::utils::{from_hex, get_event_type, process_event_reply};
-
-use std::str::FromStr;
+use super::*;
 
 impl FromStr for DesktopAddInfo {
     type Err = ParseError;
@@ -122,18 +118,18 @@ impl FromStr for DesktopEvent {
         let event_type = get_event_type(input)?;
 
         match event_type {
-            // "node_add" => Ok(NodeEvent::NodeAdd(input.parse()?)),
-            // "node_remove" => Ok(NodeEvent::NodeRemove(input.parse()?)),
-            // "node_swap" => Ok(NodeEvent::NodeSwap(input.parse()?)),
-            // "node_transfer" => Ok(NodeEvent::NodeTransfer(input.parse()?)),
-            // "node_focus" => Ok(NodeEvent::NodeFocus(input.parse()?)),
-            // "node_activate" => Ok(NodeEvent::NodeActivate(input.parse()?)),
-            // "node_presel" => Ok(NodeEvent::NodePresel(input.parse()?)),
-            // "node_stack" => Ok(NodeEvent::NodeStack(input.parse()?)),
-            // "node_geometry" => Ok(NodeEvent::NodeGeometry(input.parse()?)),
-            // "node_state" => Ok(NodeEvent::NodeState(input.parse()?)),
-            // "node_flag" => Ok(NodeEvent::NodeFlag(input.parse()?)),
-            // "node_layer" => Ok(NodeEvent::NodeLayer(input.parse()?)),
+            "desktop_add" => Ok(DesktopEvent::DesktopAdd(input.parse()?)),
+            "desktop_rename" => Ok(DesktopEvent::DesktopRename(input.parse()?)),
+            "desktop_remove" => Ok(DesktopEvent::DesktopRemove(input.parse()?)),
+            "desktop_swap" => Ok(DesktopEvent::DesktopSwap(input.parse()?)),
+            "desktop_transfer" => {
+                Ok(DesktopEvent::DesktopTransfer(input.parse()?))
+            }
+            "desktop_focus" => Ok(DesktopEvent::DesktopFocus(input.parse()?)),
+            "desktop_activate" => {
+                Ok(DesktopEvent::DesktopActivate(input.parse()?))
+            }
+            "desktop_layout" => Ok(DesktopEvent::DesktopLayout(input.parse()?)),
             _ => Err(ParseError::ConversionFailed),
         }
     }
