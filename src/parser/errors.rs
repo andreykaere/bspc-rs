@@ -29,19 +29,19 @@ impl fmt::Display for ParseError {
 }
 
 impl std::convert::From<ParseIntError> for ParseError {
-    fn from(_: ParseIntError) -> ParseError {
+    fn from(_error: ParseIntError) -> ParseError {
         ParseError::ConversionFailed
     }
 }
 
 impl std::convert::From<ParseFloatError> for ParseError {
-    fn from(_: ParseFloatError) -> ParseError {
+    fn from(_error: ParseFloatError) -> ParseError {
         ParseError::ConversionFailed
     }
 }
 
 impl std::convert::From<serde_json::Error> for ParseError {
-    fn from(_: serde_json::Error) -> ParseError {
+    fn from(_error: serde_json::Error) -> ParseError {
         ParseError::ConversionFailed
     }
 }

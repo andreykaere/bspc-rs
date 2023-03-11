@@ -114,3 +114,27 @@ impl FromStr for DesktopLayoutInfo {
         })
     }
 }
+
+impl FromStr for DesktopEvent {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let event_type = get_event_type(input)?;
+
+        match event_type {
+            // "node_add" => Ok(NodeEvent::NodeAdd(input.parse()?)),
+            // "node_remove" => Ok(NodeEvent::NodeRemove(input.parse()?)),
+            // "node_swap" => Ok(NodeEvent::NodeSwap(input.parse()?)),
+            // "node_transfer" => Ok(NodeEvent::NodeTransfer(input.parse()?)),
+            // "node_focus" => Ok(NodeEvent::NodeFocus(input.parse()?)),
+            // "node_activate" => Ok(NodeEvent::NodeActivate(input.parse()?)),
+            // "node_presel" => Ok(NodeEvent::NodePresel(input.parse()?)),
+            // "node_stack" => Ok(NodeEvent::NodeStack(input.parse()?)),
+            // "node_geometry" => Ok(NodeEvent::NodeGeometry(input.parse()?)),
+            // "node_state" => Ok(NodeEvent::NodeState(input.parse()?)),
+            // "node_flag" => Ok(NodeEvent::NodeFlag(input.parse()?)),
+            // "node_layer" => Ok(NodeEvent::NodeLayer(input.parse()?)),
+            _ => Err(ParseError::ConversionFailed),
+        }
+    }
+}

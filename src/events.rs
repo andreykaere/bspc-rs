@@ -1,6 +1,14 @@
-use super::common::*;
+use std::collections::VecDeque;
+use std::os::unix::net::UnixStream;
+use std::string::ToString;
+use strum_macros::Display;
 
-#[derive(Debug)]
+use super::common::*;
+use super::errors::ReplyError;
+use super::BspcCommunication;
+
+#[derive(Display, Debug)]
+#[strum(serialize_all = "snake_case")]
 pub enum Subscription {
     All,
     Report,
@@ -279,7 +287,40 @@ pub struct ReportInfo {}
 pub enum Event {
     Report(ReportInfo),
     Monitor(MonitorEvent),
-    Dekstop(DesktopEvent),
+    Desktop(DesktopEvent),
     Node(NodeEvent),
     PointerAction(PointerActionInfo),
+}
+
+pub struct EventIterator<'a> {
+    pub(super) stream: &'a mut UnixStream,
+    pub(super) cache: VecDeque<Result<Event, ReplyError>>,
+}
+
+impl<'a> Iterator for EventIterator<'a> {
+    type Item = Result<Event, ReplyError>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.stream.receive_message() {
+            Ok(reply) => {
+                let mut new_cache = VecDeque::new();
+
+                for res in reply.split('\n') {
+                    if res.is_empty() {
+                        continue;
+                    }
+
+                    let event = res.parse::<Event>().map_err(From::from);
+
+                    new_cache.push_back(event);
+                }
+
+                self.cache.append(&mut new_cache);
+
+                self.cache.pop_front()
+            }
+
+            Err(e) => Some(Err(e)),
+        }
+    }
 }
