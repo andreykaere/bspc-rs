@@ -424,3 +424,400 @@ impl BspwmConnection {
         Ok(self.config.merge_overlapping_monitors)
     }
 }
+
+impl BspwmConnection {
+    pub fn set_normal_border_color(
+        &mut self,
+        value: String,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("normal_border_color", &value.to_string())?;
+        self.config.normal_border_color = value;
+
+        Ok(())
+    }
+
+    pub fn set_active_border_color(
+        &mut self,
+        value: String,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("active_border_color", &value.to_string())?;
+        self.config.active_border_color = value;
+
+        Ok(())
+    }
+
+    pub fn set_focused_border_color(
+        &mut self,
+        value: String,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("focused_border_color", &value.to_string())?;
+        self.config.focused_border_color = value;
+
+        Ok(())
+    }
+
+    pub fn set_presel_feedback_color(
+        &mut self,
+        value: String,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("presel_feedback_color", &value.to_string())?;
+        self.config.presel_feedback_color = value;
+
+        Ok(())
+    }
+
+    pub fn set_split_ratio(&mut self, value: f32) -> Result<(), ReplyError> {
+        self.set_config_property("split_ratio", &value.to_string())?;
+        self.config.split_ratio = value;
+
+        Ok(())
+    }
+
+    pub fn set_status_prefix(
+        &mut self,
+        value: String,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("status_prefix", &value.to_string())?;
+        self.config.status_prefix = value;
+
+        Ok(())
+    }
+
+    pub fn set_external_rules_command(
+        &mut self,
+        value: String,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("external_rules_command", &value.to_string())?;
+        self.config.external_rules_command = value;
+
+        Ok(())
+    }
+
+    pub fn set_automatic_scheme(
+        &mut self,
+        value: Scheme,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("automatic_scheme", &value.to_string())?;
+        self.config.automatic_scheme = value;
+
+        Ok(())
+    }
+
+    pub fn set_initial_polarity(
+        &mut self,
+        value: Polarity,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("initial_polarity", &value.to_string())?;
+        self.config.initial_polarity = value;
+
+        Ok(())
+    }
+
+    pub fn set_directional_focus_tightness(
+        &mut self,
+        value: Tightness,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property(
+            "directional_focus_tightness",
+            &value.to_string(),
+        )?;
+        self.config.directional_focus_tightness = value;
+
+        Ok(())
+    }
+
+    pub fn set_removal_adjustment(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("removal_adjustment", &value.to_string())?;
+        self.config.removal_adjustment = value;
+
+        Ok(())
+    }
+
+    pub fn set_presel_feedback(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("presel_feedback", &value.to_string())?;
+        self.config.presel_feedback = value;
+
+        Ok(())
+    }
+
+    pub fn set_borderless_monocle(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("borderless_monocle", &value.to_string())?;
+        self.config.borderless_monocle = value;
+
+        Ok(())
+    }
+
+    pub fn set_gapless_monocle(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("gapless_monocle", &value.to_string())?;
+        self.config.gapless_monocle = value;
+
+        Ok(())
+    }
+
+    pub fn set_top_monocle_padding(
+        &mut self,
+        value: i16,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("top_monocle_padding", &value.to_string())?;
+        self.config.top_monocle_padding = value;
+
+        Ok(())
+    }
+
+    pub fn set_right_monocle_padding(
+        &mut self,
+        value: i16,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("right_monocle_padding", &value.to_string())?;
+        self.config.right_monocle_padding = value;
+
+        Ok(())
+    }
+
+    pub fn set_bottom_monocle_padding(
+        &mut self,
+        value: i16,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("bottom_monocle_padding", &value.to_string())?;
+        self.config.bottom_monocle_padding = value;
+
+        Ok(())
+    }
+
+    pub fn set_left_monocle_padding(
+        &mut self,
+        value: i16,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("left_monocle_padding", &value.to_string())?;
+        self.config.left_monocle_padding = value;
+
+        Ok(())
+    }
+
+    pub fn set_single_monocle(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("single_monocle", &value.to_string())?;
+        self.config.single_monocle = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_motion_interval(
+        &mut self,
+        value: u16,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property(
+            "pointer_motion_interval",
+            &value.to_string(),
+        )?;
+        self.config.pointer_motion_interval = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_modifier(
+        &mut self,
+        value: PointerModifier,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("pointer_modifier", &value.to_string())?;
+        self.config.pointer_modifier = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_action1(
+        &mut self,
+        value: PointerAction,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("pointer_action1", &value.to_string())?;
+        self.config.pointer_action1 = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_action2(
+        &mut self,
+        value: PointerAction,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("pointer_action2", &value.to_string())?;
+        self.config.pointer_action2 = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_action3(
+        &mut self,
+        value: PointerAction,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("pointer_action3", &value.to_string())?;
+        self.config.pointer_action3 = value;
+
+        Ok(())
+    }
+
+    pub fn set_click_to_focus(
+        &mut self,
+        value: ClickToFocus,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("click_to_focus", &value.to_string())?;
+        self.config.click_to_focus = value;
+
+        Ok(())
+    }
+
+    pub fn set_swallow_first_click(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("swallow_first_click", &value.to_string())?;
+        self.config.swallow_first_click = value;
+
+        Ok(())
+    }
+
+    pub fn set_focus_follows_pointer(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("focus_follows_pointer", &value.to_string())?;
+        self.config.focus_follows_pointer = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_follows_focus(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("pointer_follows_focus", &value.to_string())?;
+        self.config.pointer_follows_focus = value;
+
+        Ok(())
+    }
+
+    pub fn set_pointer_follows_monitor(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property(
+            "pointer_follows_monitor",
+            &value.to_string(),
+        )?;
+        self.config.pointer_follows_monitor = value;
+
+        Ok(())
+    }
+
+    pub fn set_mapping_events_count(
+        &mut self,
+        value: i32,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("mapping_events_count", &value.to_string())?;
+        self.config.mapping_events_count = value;
+
+        Ok(())
+    }
+
+    pub fn set_ignore_ewmh_focus(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("ignore_ewmh_focus", &value.to_string())?;
+        self.config.ignore_ewmh_focus = value;
+
+        Ok(())
+    }
+
+    pub fn set_ignore_ewmh_fullscreen(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("ignore_ewmh_fullscreen", &value.to_string())?;
+        self.config.ignore_ewmh_fullscreen = value;
+
+        Ok(())
+    }
+
+    pub fn set_ignore_ewmh_struts(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("ignore_ewmh_struts", &value.to_string())?;
+        self.config.ignore_ewmh_struts = value;
+
+        Ok(())
+    }
+
+    pub fn set_center_pseudo_tiled(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("center_pseudo_tiled", &value.to_string())?;
+        self.config.center_pseudo_tiled = value;
+
+        Ok(())
+    }
+
+    pub fn set_honor_size_hints(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property("honor_size_hints", &value.to_string())?;
+        self.config.honor_size_hints = value;
+
+        Ok(())
+    }
+
+    pub fn set_remove_disabled_monitors(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property(
+            "remove_disabled_monitors",
+            &value.to_string(),
+        )?;
+        self.config.remove_disabled_monitors = value;
+
+        Ok(())
+    }
+
+    pub fn set_remove_unplugged_monitors(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property(
+            "remove_unplugged_monitors",
+            &value.to_string(),
+        )?;
+        self.config.remove_unplugged_monitors = value;
+
+        Ok(())
+    }
+
+    pub fn set_merge_overlapping_monitors(
+        &mut self,
+        value: bool,
+    ) -> Result<(), ReplyError> {
+        self.set_config_property(
+            "merge_overlapping_monitors",
+            &value.to_string(),
+        )?;
+        self.config.merge_overlapping_monitors = value;
+
+        Ok(())
+    }
+}
