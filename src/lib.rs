@@ -88,8 +88,20 @@ impl BspwmConnection {
             .collect::<Vec<_>>()
             .join("\x00");
 
-        let subscribe_message =
-            format!("subscribe\x00{}\x00", all_subscriptions);
+        let mut count_option = String::new();
+        let mut fifo_option = "";
+
+        if let Some(x) = count {
+            count_option = format!("--count\x00{}\x00", x);
+        }
+
+        if let Some(()) = fifo {
+            fifo_option = "--fifo\x00";
+        }
+        let subscribe_message = format!(
+            "subscribe\x00{}{}{}\x00",
+            fifo_option, count_option, all_subscriptions
+        );
 
         self.stream.send_message(&subscribe_message)
     }
