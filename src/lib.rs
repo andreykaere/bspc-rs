@@ -10,13 +10,11 @@ mod parser;
 pub mod properties;
 pub mod query;
 
-use config::Config;
 use errors::{ParseError, ReplyError};
 use events::{Event, EventIterator, Subscription};
 
 pub struct BspwmConnection {
     stream: UnixStream,
-    config: Config,
 }
 
 pub trait BspcCommunication {
@@ -68,10 +66,9 @@ impl BspwmConnection {
 
     pub fn connect() -> Result<BspwmConnection, ReplyError> {
         let socket_path = Self::locate_socket();
-        let mut stream = UnixStream::connect(socket_path)?;
-        let config = Config::load(&mut stream)?;
+        let stream = UnixStream::connect(socket_path)?;
 
-        Ok(Self { stream, config })
+        Ok(Self { stream })
     }
 
     /// Subscribes to the given events
