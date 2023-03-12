@@ -3,13 +3,13 @@ use std::env;
 use std::io::{self, Read, Write};
 use std::os::unix::net::UnixStream;
 
-pub mod config;
 pub mod errors;
 pub mod events;
 mod parser;
 pub mod properties;
 pub mod query;
 pub mod selectors;
+pub mod settings;
 
 use errors::{ParseError, ReplyError};
 use events::{Event, EventIterator, Subscription};

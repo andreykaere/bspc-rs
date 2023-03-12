@@ -36,6 +36,13 @@ pub enum CycleDir {
     Prev,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum SplitType {
+    Vertical,
+    Horizontal,
+}
+
 #[derive(Debug)]
 pub enum Presel {
     Dir(Dir),

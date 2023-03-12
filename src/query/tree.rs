@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::properties::{Dir, Layer, Layout, Rectangle, State};
+use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {
@@ -8,13 +8,6 @@ pub struct Padding {
     pub right: i32,
     pub bottom: i32,
     pub left: i32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub enum SplitType {
-    Vertical,
-    Horizontal,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
