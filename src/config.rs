@@ -9,15 +9,6 @@ use crate::{BspcCommunication, BspwmConnection};
 
 #[derive(Debug, Clone, Copy, EnumString, Display)]
 #[strum(serialize_all = "snake_case")]
-pub enum Bool {
-    True,
-    False,
-    On,
-    Off,
-}
-
-#[derive(Debug, Clone, Copy, EnumString, Display)]
-#[strum(serialize_all = "snake_case")]
 pub enum Scheme {
     LongestSide,
     Alternate,
@@ -83,34 +74,34 @@ pub enum ClickToFocus {
 //     automatic_scheme: Scheme,
 //     initial_polarity: Polarity,
 //     directional_focus_tightness: Tightness,
-//     removal_adjustment: Bool,
-//     presel_feedback: Bool,
-//     borderless_monocle: Bool,
-//     gapless_monocle: Bool,
+//     removal_adjustment: bool,
+//     presel_feedback: bool,
+//     borderless_monocle: bool,
+//     gapless_monocle: bool,
 //     top_monocle_padding: i16,
 //     right_monocle_padding: i16,
 //     bottom_monocle_padding: i16,
 //     left_monocle_padding: i16,
-//     single_monocle: Bool,
+//     single_monocle: bool,
 //     pointer_motion_interval: u16,
 //     pointer_modifier: PointerModifier,
 //     pointer_action1: PointerAction,
 //     pointer_action2: PointerAction,
 //     pointer_action3: PointerAction,
 //     click_to_focus: ClickToFocus,
-//     swallow_first_click: Bool,
-//     focus_follows_pointer: Bool,
-//     pointer_follows_focus: Bool,
-//     pointer_follows_monitor: Bool,
+//     swallow_first_click: bool,
+//     focus_follows_pointer: bool,
+//     pointer_follows_focus: bool,
+//     pointer_follows_monitor: bool,
 //     mapping_events_count: i32,
-//     ignore_ewmh_focus: Bool,
-//     ignore_ewmh_fullscreen: Bool,
-//     ignore_ewmh_struts: Bool,
-//     center_pseudo_tiled: Bool,
-//     honor_size_hints: Bool,
-//     remove_disabled_monitors: Bool,
-//     remove_unplugged_monitors: Bool,
-//     merge_overlapping_monitors: Bool,
+//     ignore_ewmh_focus: bool,
+//     ignore_ewmh_fullscreen: bool,
+//     ignore_ewmh_struts: bool,
+//     center_pseudo_tiled: bool,
+//     honor_size_hints: bool,
+//     remove_disabled_monitors: bool,
+//     remove_unplugged_monitors: bool,
+//     merge_overlapping_monitors: bool,
 // }
 
 trait ConfigProperties {
@@ -204,25 +195,25 @@ impl BspwmConnection {
             .map_err(From::from)
     }
 
-    pub fn get_removal_adjustment(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_removal_adjustment(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("removal_adjustment")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_presel_feedback(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_presel_feedback(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("presel_feedback")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_borderless_monocle(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_borderless_monocle(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("borderless_monocle")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_gapless_monocle(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_gapless_monocle(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("gapless_monocle")?
             .parse()
             .map_err(From::from)
@@ -252,7 +243,7 @@ impl BspwmConnection {
             .map_err(From::from)
     }
 
-    pub fn get_single_monocle(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_single_monocle(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("single_monocle")?
             .parse()
             .map_err(From::from)
@@ -296,25 +287,25 @@ impl BspwmConnection {
             .map_err(From::from)
     }
 
-    pub fn get_swallow_first_click(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_swallow_first_click(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("swallow_first_click")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_focus_follows_pointer(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_focus_follows_pointer(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("focus_follows_pointer")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_pointer_follows_focus(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_pointer_follows_focus(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("pointer_follows_focus")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_pointer_follows_monitor(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_pointer_follows_monitor(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("pointer_follows_monitor")?
             .parse()
             .map_err(From::from)
@@ -326,37 +317,37 @@ impl BspwmConnection {
             .map_err(From::from)
     }
 
-    pub fn get_ignore_ewmh_focus(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_ignore_ewmh_focus(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("ignore_ewmh_focus")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_ignore_ewmh_fullscreen(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_ignore_ewmh_fullscreen(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("ignore_ewmh_fullscreen")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_ignore_ewmh_struts(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_ignore_ewmh_struts(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("ignore_ewmh_struts")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_center_pseudo_tiled(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_center_pseudo_tiled(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("center_pseudo_tiled")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_honor_size_hints(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_honor_size_hints(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("honor_size_hints")?
             .parse()
             .map_err(From::from)
     }
 
-    pub fn get_remove_disabled_monitors(&mut self) -> Result<Bool, ReplyError> {
+    pub fn get_remove_disabled_monitors(&mut self) -> Result<bool, ReplyError> {
         self.get_config_property("remove_disabled_monitors")?
             .parse()
             .map_err(From::from)
@@ -364,7 +355,7 @@ impl BspwmConnection {
 
     pub fn get_remove_unplugged_monitors(
         &mut self,
-    ) -> Result<Bool, ReplyError> {
+    ) -> Result<bool, ReplyError> {
         self.get_config_property("remove_unplugged_monitors")?
             .parse()
             .map_err(From::from)
@@ -372,7 +363,7 @@ impl BspwmConnection {
 
     pub fn get_merge_overlapping_monitors(
         &mut self,
-    ) -> Result<Bool, ReplyError> {
+    ) -> Result<bool, ReplyError> {
         self.get_config_property("merge_overlapping_monitors")?
             .parse()
             .map_err(From::from)
@@ -452,28 +443,28 @@ impl BspwmConnection {
 
     pub fn set_removal_adjustment(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("removal_adjustment", &value.to_string())
     }
 
     pub fn set_presel_feedback(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("presel_feedback", &value.to_string())
     }
 
     pub fn set_borderless_monocle(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("borderless_monocle", &value.to_string())
     }
 
     pub fn set_gapless_monocle(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("gapless_monocle", &value.to_string())
     }
@@ -508,7 +499,7 @@ impl BspwmConnection {
 
     pub fn set_single_monocle(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("single_monocle", &value.to_string())
     }
@@ -557,28 +548,28 @@ impl BspwmConnection {
 
     pub fn set_swallow_first_click(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("swallow_first_click", &value.to_string())
     }
 
     pub fn set_focus_follows_pointer(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("focus_follows_pointer", &value.to_string())
     }
 
     pub fn set_pointer_follows_focus(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("pointer_follows_focus", &value.to_string())
     }
 
     pub fn set_pointer_follows_monitor(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("pointer_follows_monitor", &value.to_string())
     }
@@ -592,49 +583,49 @@ impl BspwmConnection {
 
     pub fn set_ignore_ewmh_focus(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("ignore_ewmh_focus", &value.to_string())
     }
 
     pub fn set_ignore_ewmh_fullscreen(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("ignore_ewmh_fullscreen", &value.to_string())
     }
 
     pub fn set_ignore_ewmh_struts(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("ignore_ewmh_struts", &value.to_string())
     }
 
     pub fn set_center_pseudo_tiled(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("center_pseudo_tiled", &value.to_string())
     }
 
     pub fn set_honor_size_hints(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("honor_size_hints", &value.to_string())
     }
 
     pub fn set_remove_disabled_monitors(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property("remove_disabled_monitors", &value.to_string())
     }
 
     pub fn set_remove_unplugged_monitors(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property(
             "remove_unplugged_monitors",
@@ -644,7 +635,7 @@ impl BspwmConnection {
 
     pub fn set_merge_overlapping_monitors(
         &mut self,
-        value: Bool,
+        value: bool,
     ) -> Result<(), ReplyError> {
         self.set_config_property(
             "merge_overlapping_monitors",

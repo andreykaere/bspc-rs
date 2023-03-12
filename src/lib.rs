@@ -9,6 +9,7 @@ pub mod events;
 mod parser;
 pub mod properties;
 pub mod query;
+pub mod selectors;
 
 use errors::{ParseError, ReplyError};
 use events::{Event, EventIterator, Subscription};

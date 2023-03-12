@@ -28,6 +28,14 @@ pub enum Dir {
     East,
 }
 
+#[derive(Debug, EnumString, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[strum(serialize_all = "snake_case")]
+pub enum CycleDir {
+    Next,
+    Prev,
+}
+
 #[derive(Debug)]
 pub enum Presel {
     Dir(Dir),

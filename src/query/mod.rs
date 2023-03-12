@@ -1,3 +1,4 @@
+use crate::selectors::Selector;
 use crate::BspwmConnection;
 
 pub mod tree;
@@ -8,16 +9,6 @@ pub enum QueryOptions {
     Monitor,
     Desktop,
     Node,
-}
-
-pub struct MonitorSelector {}
-pub struct DesktopSelector {}
-pub struct NodeSelector {}
-
-pub enum QuerySelectors {
-    Monitor(MonitorSelector),
-    Desktop(DesktopSelector),
-    Node(NodeSelector),
 }
 
 impl BspwmConnection {
@@ -35,8 +26,8 @@ impl BspwmConnection {
 
     pub fn query_tree(
         &mut self,
-        opts: QueryOptions,
-        sel: QuerySelectors,
+        options: QueryOptions,
+        selector: Selector,
     ) -> Tree {
         todo!();
     }
