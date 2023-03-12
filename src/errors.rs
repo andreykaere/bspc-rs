@@ -2,6 +2,7 @@ use core::fmt;
 use std::error::Error;
 use std::io;
 use std::os::unix::net::UnixStream;
+use strum;
 
 pub use crate::parser::errors::*;
 
@@ -28,8 +29,8 @@ impl std::convert::From<io::Error> for ReplyError {
     }
 }
 
-impl std::convert::From<ParseError> for ReplyError {
-    fn from(error: ParseError) -> ReplyError {
-        ReplyError::ParseError(error)
+impl<T: std::convert::Into<ParseError>> std::convert::From<T> for ReplyError {
+    fn from(error: T) -> ReplyError {
+        ReplyError::ParseError(Into::into(error))
     }
 }

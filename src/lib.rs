@@ -3,30 +3,20 @@ use std::env;
 use std::io::{self, Read, Write};
 use std::os::unix::net::UnixStream;
 
+pub mod config;
 pub mod errors;
 pub mod events;
 mod parser;
 pub mod properties;
-pub mod tree;
+pub mod query;
 
+use config::Config;
 use errors::{ParseError, ReplyError};
 use events::{Event, EventIterator, Subscription};
-use tree::Tree;
 
 pub struct BspwmConnection {
     stream: UnixStream,
-}
-
-pub enum QueryOptions {
-    Monitor,
-    Desktop,
-    Node,
-}
-
-pub enum QuerySelectors {
-    // Monitor(MonitorSelector),
-    // Desktop(DesktopSelector),
-    // Node(NodeSelector),
+    config: Config,
 }
 
 pub trait BspcCommunication {
@@ -41,7 +31,8 @@ impl BspcCommunication for UnixStream {
     }
 
     fn receive_message(&mut self) -> Result<String, ReplyError> {
-        let mut buf = [0u8; 1024];
+        // https://unix.stackexchange.com/questions/424380/what-values-may-linux-use-for-the-default-unix-socket-buffer-size
+        let mut buf = [0u8; 212992];
         let len = self.read(&mut buf)?;
 
         if len == 0 {
@@ -51,6 +42,15 @@ impl BspcCommunication for UnixStream {
         let reply = String::from_utf8_lossy(&buf[..len]);
 
         Ok(reply.to_string())
+    }
+}
+
+impl BspcCommunication for BspwmConnection {
+    fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
+        self.stream.send_message(message)
+    }
+    fn receive_message(&mut self) -> Result<String, ReplyError> {
+        self.stream.receive_message()
     }
 }
 
@@ -66,13 +66,16 @@ impl BspwmConnection {
         }
     }
 
-    pub fn connect() -> io::Result<BspwmConnection> {
+    pub fn connect() -> Result<BspwmConnection, ReplyError> {
         let socket_path = Self::locate_socket();
-        let stream = UnixStream::connect(socket_path)?;
+        let mut stream = UnixStream::connect(socket_path)?;
+        let config = Config::load(&mut stream)?;
 
-        Ok(Self { stream })
+        Ok(Self { stream, config })
     }
 
+    /// Subscribes to the given events
+    // TODO: implement fifo and count, right now have no idea what they do
     pub fn subscribe(
         &mut self,
         fifo: Option<()>,
@@ -91,32 +94,13 @@ impl BspwmConnection {
         self.stream.send_message(&subscribe_message)
     }
 
+    /// Listen to the subscriptions
     pub fn listen(&mut self) -> EventIterator {
         EventIterator {
             stream: &mut self.stream,
             cache: VecDeque::new(),
         }
     }
-
-    // pub fn query_nodes(&mut self) -> Vec<i32> {
-    //     todo!();
-    // }
-
-    // pub fn query_desktops(&mut self) -> Vec<i32> {
-    //     todo!();
-    // }
-
-    // pub fn query_monitors(&mut self) -> Vec<i32> {
-    //     todo!();
-    // }
-
-    // pub fn query_tree(
-    //     &mut self,
-    //     opts: QueryOptions,
-    //     sel: QuerySelectors,
-    // ) -> Tree {
-    //     todo!();
-    // }
 }
 
 #[cfg(test)]

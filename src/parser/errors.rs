@@ -1,6 +1,7 @@
 use core::fmt;
 use std::error::Error;
 use std::num::{ParseFloatError, ParseIntError};
+use std::str::ParseBoolError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
@@ -30,6 +31,12 @@ impl fmt::Display for ParseError {
 
 impl std::convert::From<ParseIntError> for ParseError {
     fn from(_error: ParseIntError) -> ParseError {
+        ParseError::ConversionFailed
+    }
+}
+
+impl std::convert::From<ParseBoolError> for ParseError {
+    fn from(_error: ParseBoolError) -> ParseError {
         ParseError::ConversionFailed
     }
 }

@@ -1,11 +1,11 @@
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::os::unix::net::UnixStream;
 use std::string::ToString;
 use strum_macros::Display;
 
-use super::errors::{ParseError, ReplyError};
-use super::properties::*;
-use super::BspcCommunication;
+use crate::errors::{ParseError, ReplyError};
+use crate::properties::*;
+use crate::BspcCommunication;
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]
@@ -280,8 +280,27 @@ pub struct PointerActionInfo {
 }
 
 #[derive(Debug)]
+pub enum ReportDesktopState {
+    Free,
+    Occupied,
+    Urgent,
+}
+
+#[derive(Debug)]
+pub struct ReportDesktopInfo {
+    pub state: ReportDesktopState,
+    pub focused: bool,
+}
+
+#[derive(Debug)]
+pub struct ReportMonitorInfo {
+    pub desktops: HashMap<String, ReportDesktopInfo>,
+    pub focused: bool,
+}
+
+#[derive(Debug)]
 // TODO: implement it
-pub struct ReportInfo {}
+pub struct ReportInfo(HashMap<String, ReportMonitorInfo>);
 
 #[derive(Debug)]
 pub enum Event {
@@ -295,8 +314,8 @@ pub enum Event {
 pub struct EventIterator<'a> {
     pub(super) stream: &'a mut UnixStream,
 
-    /// This is needed if by one `read` we obtain more, than one events.
-    /// Whenever it happens, we push these back and take one from the front.
+    // This is needed if by one `read` we obtain more, than one events.
+    // Whenever it happens, we push these back and take one from the front.
     pub(super) cache: VecDeque<Result<Event, ReplyError>>,
 }
 

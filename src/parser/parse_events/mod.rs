@@ -24,9 +24,9 @@ impl FromStr for Event {
             return Ok(Event::Monitor(x));
         }
 
-        // if let Ok(x) = input.parse::<ReportInfo>() {
-        //     return Ok(Event::Report(x));
-        // }
+        if let Ok(x) = input.parse::<ReportInfo>() {
+            return Ok(Event::Report(x));
+        }
 
         if let Ok(x) = input.parse::<PointerActionInfo>() {
             return Ok(Event::PointerAction(x));
@@ -49,5 +49,13 @@ impl FromStr for PointerActionInfo {
             action: reply[4].parse()?,
             action_state: reply[5].parse()?,
         })
+    }
+}
+
+impl FromStr for ReportInfo {
+    type Err = ParseError;
+
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
+        todo!();
     }
 }

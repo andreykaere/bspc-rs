@@ -40,3 +40,11 @@ impl FromStr for Rectangle {
         })
     }
 }
+
+// impl FromStr for Presel {
+//     type Err = ParseError;
+
+//     fn from_str(input: &str) -> Result<Self, Self::Err> {
+//         let split: Vec<_> = input.split(' ').collect();
+//     }
+// }
