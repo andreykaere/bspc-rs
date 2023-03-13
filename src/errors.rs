@@ -8,10 +8,32 @@ pub use crate::parser::errors::*;
 
 #[derive(Debug)]
 #[non_exhaustive]
+pub enum QueryError {
+    NoMatches,
+    InvalidRequest(String),
+}
+
+impl Error for QueryError {}
+
+impl fmt::Display for QueryError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            QueryError::NoMatches => {
+                write!(f, "Query request hasn't have any matches")
+            }
+            QueryError::InvalidRequest(err) => write!(f, "{}", err),
+        }
+    }
+}
+
+#[derive(Debug)]
+#[non_exhaustive]
 pub enum ReplyError {
     ConnectionError(io::Error),
     ParseError(ParseError),
+    QueryError(QueryError),
     InvalidRequest,
+    RequestFailed(String),
 }
 
 impl Error for ReplyError {}
@@ -22,6 +44,8 @@ impl fmt::Display for ReplyError {
             ReplyError::ConnectionError(err) => err.fmt(f),
             ReplyError::ParseError(err) => err.fmt(f),
             ReplyError::InvalidRequest => write!(f, "Given request is invalid"),
+            ReplyError::QueryError(err) => err.fmt(f),
+            ReplyError::RequestFailed(err) => write!(f, "{}", err),
         }
     }
 }

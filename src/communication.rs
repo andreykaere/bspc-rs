@@ -14,7 +14,6 @@ impl BspcCommunication for UnixStream {
         Ok(())
     }
 
-    // TODO: add proper reply handling and error printing/conversion
     fn receive_message(&mut self) -> Result<String, ReplyError> {
         // https://unix.stackexchange.com/questions/424380/what-values-may-linux-use-for-the-default-unix-socket-buffer-size
         let mut buf = [0u8; 212992];
@@ -25,6 +24,12 @@ impl BspcCommunication for UnixStream {
         }
 
         let reply = String::from_utf8_lossy(&buf[..len]);
+
+        // It means, that a error has occurred
+        if buf[0] == 7 {
+            let reply = String::from_utf8_lossy(&buf[1..len]);
+            return Err(ReplyError::RequestFailed(reply.to_string()));
+        }
 
         Ok(reply.to_string())
     }
