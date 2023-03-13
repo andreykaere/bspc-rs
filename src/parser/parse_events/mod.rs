@@ -13,15 +13,15 @@ impl FromStr for Event {
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
         if let Ok(x) = input.parse::<NodeEvent>() {
-            return Ok(Event::Node(x));
+            return Ok(Event::NodeEvent(x));
         }
 
         if let Ok(x) = input.parse::<DesktopEvent>() {
-            return Ok(Event::Desktop(x));
+            return Ok(Event::DesktopEvent(x));
         }
 
         if let Ok(x) = input.parse::<MonitorEvent>() {
-            return Ok(Event::Monitor(x));
+            return Ok(Event::MonitorEvent(x));
         }
 
         if let Ok(x) = input.parse::<ReportInfo>() {

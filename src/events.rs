@@ -306,9 +306,9 @@ pub struct ReportInfo(HashMap<String, ReportMonitorInfo>);
 #[derive(Debug)]
 pub enum Event {
     Report(ReportInfo),
-    Monitor(MonitorEvent),
-    Desktop(DesktopEvent),
-    Node(NodeEvent),
+    MonitorEvent(MonitorEvent),
+    DesktopEvent(DesktopEvent),
+    NodeEvent(NodeEvent),
     PointerAction(PointerActionInfo),
 }
 
