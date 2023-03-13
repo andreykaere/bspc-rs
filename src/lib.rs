@@ -46,16 +46,13 @@ impl BspwmConnection {
 mod test {
     use super::events::*;
     use super::*;
-    use std::error::Error;
-    use std::io::{self, Read, Write};
-    use std::os::unix::net::UnixStream;
 
     #[test]
     fn test_subscribe() {
         let mut conn = BspwmConnection::connect().unwrap();
         let subscriptions =
             vec![Subscription::All, Subscription::MonitorGeometry];
-        conn.subscribe(None, None, &subscriptions);
+        conn.subscribe(false, None, &subscriptions);
     }
 
     #[test]
@@ -63,7 +60,7 @@ mod test {
         let mut conn = BspwmConnection::connect().unwrap();
         // let subscriptions = vec![Subscription::Desktop];
         let subscriptions = vec![Subscription::Desktop, Subscription::Node];
-        conn.subscribe(None, None, &subscriptions);
+        conn.subscribe(false, None, &subscriptions);
 
         for event in conn.listen() {
             println!("{event:#?}");

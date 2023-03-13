@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
+use crate::Id;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {
@@ -42,7 +43,7 @@ pub struct PreselNode {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Node {
-    pub id: i32,
+    pub id: Id,
     pub split_type: SplitType,
     pub split_ratio: f32,
     pub vacant: bool,
@@ -63,7 +64,7 @@ pub struct Node {
 #[serde(rename_all = "camelCase")]
 pub struct Desktop {
     pub name: String,
-    pub id: i32,
+    pub id: Id,
     pub layout: Layout,
     pub user_layout: Layout,
     pub window_gap: i32,
@@ -75,13 +76,13 @@ pub struct Desktop {
 #[serde(rename_all = "camelCase")]
 pub struct Monitor {
     pub name: String,
-    pub id: i32,
-    pub randr_id: i32,
+    pub id: Id,
+    pub randr_id: Id,
     pub wired: bool,
     pub sticky_count: i32,
     pub window_gap: i32,
     pub border_width: i32,
-    pub focused_desktop_id: i32,
+    pub focused_desktop_id: Id,
     pub padding: Padding,
     pub rectangle: Rectangle,
     pub desktops: Vec<Desktop>,
@@ -93,6 +94,14 @@ pub enum Tree {
     Desktop(Desktop),
     Monitor(Monitor),
 }
+
+// impl From<Id> for Node {
+//     fn from(id: Id) -> Self {
+//         let tree = query_tree();
+
+//         todo!();
+//     }
+// }
 
 #[cfg(test)]
 mod test {

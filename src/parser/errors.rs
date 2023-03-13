@@ -3,7 +3,7 @@ use std::error::Error;
 use std::num::{ParseFloatError, ParseIntError};
 use std::str::ParseBoolError;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug)]
 #[non_exhaustive]
 pub enum ParseError {
     InsufficientData,

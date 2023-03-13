@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 pub mod errors;
 pub mod parse_events;
-mod utils;
+pub mod utils;
 
 impl FromStr for Presel {
     type Err = ParseError;

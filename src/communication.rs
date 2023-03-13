@@ -14,6 +14,7 @@ impl BspcCommunication for UnixStream {
         Ok(())
     }
 
+    // TODO: add proper reply handling and error printing/conversion
     fn receive_message(&mut self) -> Result<String, ReplyError> {
         // https://unix.stackexchange.com/questions/424380/what-values-may-linux-use-for-the-default-unix-socket-buffer-size
         let mut buf = [0u8; 212992];

@@ -7,9 +7,11 @@ use strum;
 pub use crate::parser::errors::*;
 
 #[derive(Debug)]
+#[non_exhaustive]
 pub enum ReplyError {
     ConnectionError(io::Error),
     ParseError(ParseError),
+    InvalidRequest,
 }
 
 impl Error for ReplyError {}
@@ -19,6 +21,7 @@ impl fmt::Display for ReplyError {
         match self {
             ReplyError::ConnectionError(err) => err.fmt(f),
             ReplyError::ParseError(err) => err.fmt(f),
+            ReplyError::InvalidRequest => write!(f, "Given request is invalid"),
         }
     }
 }

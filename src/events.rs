@@ -356,7 +356,7 @@ impl BspwmConnection {
     /// Subscribes to the given events
     pub fn subscribe(
         &mut self,
-        fifo: Option<()>,
+        fifo_flag: bool,
         count: Option<u32>,
         subscriptions: &[Subscription],
     ) -> Result<(), ReplyError> {
@@ -373,9 +373,10 @@ impl BspwmConnection {
             count_option = format!("--count\x00{}\x00", x);
         }
 
-        if let Some(()) = fifo {
+        if fifo_flag {
             fifo_option = "--fifo\x00";
         }
+
         let subscribe_message = format!(
             "subscribe\x00{}{}{}\x00",
             fifo_option, count_option, all_subscriptions
