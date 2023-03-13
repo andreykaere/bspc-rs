@@ -23,13 +23,13 @@ impl fmt::Display for ReplyError {
     }
 }
 
-impl std::convert::From<io::Error> for ReplyError {
+impl From<io::Error> for ReplyError {
     fn from(error: io::Error) -> ReplyError {
         ReplyError::ConnectionError(error)
     }
 }
 
-impl<T: std::convert::Into<ParseError>> std::convert::From<T> for ReplyError {
+impl<T: Into<ParseError>> From<T> for ReplyError {
     fn from(error: T) -> ReplyError {
         ReplyError::ParseError(Into::into(error))
     }

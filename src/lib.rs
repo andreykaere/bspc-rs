@@ -11,9 +11,12 @@ pub mod properties;
 pub mod query;
 pub mod selectors;
 pub mod settings;
+pub mod tree;
 
 use errors::{ParseError, ReplyError};
 use events::{Event, EventIterator, Subscription};
+
+pub type Id = u32;
 
 pub struct BspwmConnection {
     stream: UnixStream,

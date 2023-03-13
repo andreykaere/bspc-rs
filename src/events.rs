@@ -6,7 +6,7 @@ use strum_macros::Display;
 use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
 use crate::properties::*;
-use crate::BspwmConnection;
+use crate::{BspwmConnection, Id};
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]
@@ -46,37 +46,37 @@ pub enum Subscription {
 
 #[derive(Debug)]
 pub struct MonitorAddInfo {
-    pub monitor_id: i32,
+    pub monitor_id: Id,
     pub monitor_name: String,
     pub monitor_geometry: Rectangle,
 }
 
 #[derive(Debug)]
 pub struct MonitorRenameInfo {
-    pub monitor_id: i32,
+    pub monitor_id: Id,
     pub old_name: String,
     pub new_name: String,
 }
 
 #[derive(Debug)]
 pub struct MonitorRemoveInfo {
-    pub monitor_id: i32,
+    pub monitor_id: Id,
 }
 
 #[derive(Debug)]
 pub struct MonitorSwapInfo {
-    pub src_monitor_id: i32,
-    pub dst_monitor_id: i32,
+    pub src_monitor_id: Id,
+    pub dst_monitor_id: Id,
 }
 
 #[derive(Debug)]
 pub struct MonitorFocusInfo {
-    pub monitor_id: i32,
+    pub monitor_id: Id,
 }
 
 #[derive(Debug)]
 pub struct MonitorGeometryInfo {
-    pub monitor_id: i32,
+    pub monitor_id: Id,
     pub monitor_geometry: Rectangle,
 }
 
@@ -92,56 +92,56 @@ pub enum MonitorEvent {
 
 #[derive(Debug)]
 pub struct DesktopAddInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
     pub desktop_name: String,
 }
 
 #[derive(Debug)]
 pub struct DesktopRenameInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
     pub old_name: String,
     pub new_name: String,
 }
 
 #[derive(Debug)]
 pub struct DesktopRemoveInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
 }
 
 #[derive(Debug)]
 pub struct DesktopSwapInfo {
-    pub src_monitor_id: i32,
-    pub src_desktop_id: i32,
-    pub dst_monitor_id: i32,
-    pub dst_desktop_id: i32,
+    pub src_monitor_id: Id,
+    pub src_desktop_id: Id,
+    pub dst_monitor_id: Id,
+    pub dst_desktop_id: Id,
 }
 
 #[derive(Debug)]
 pub struct DesktopTransferInfo {
-    pub src_monitor_id: i32,
-    pub src_desktop_id: i32,
-    pub dst_monitor_id: i32,
+    pub src_monitor_id: Id,
+    pub src_desktop_id: Id,
+    pub dst_monitor_id: Id,
 }
 
 #[derive(Debug)]
 pub struct DesktopFocusInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
 }
 
 #[derive(Debug)]
 pub struct DesktopActivateInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
 }
 
 #[derive(Debug)]
 pub struct DesktopLayoutInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
     pub layout: Layout,
 }
 
@@ -159,99 +159,99 @@ pub enum DesktopEvent {
 
 #[derive(Debug)]
 pub struct NodeAddInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub ip_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub ip_id: Id,
+    pub node_id: Id,
 }
 
 #[derive(Debug)]
 pub struct NodeRemoveInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
 }
 
 #[derive(Debug)]
 pub struct NodeSwapInfo {
-    pub src_monitor_id: i32,
-    pub src_desktop_id: i32,
-    pub src_node_id: i32,
-    pub dst_monitor_id: i32,
-    pub dst_desktop_id: i32,
-    pub dst_node_id: i32,
+    pub src_monitor_id: Id,
+    pub src_desktop_id: Id,
+    pub src_node_id: Id,
+    pub dst_monitor_id: Id,
+    pub dst_desktop_id: Id,
+    pub dst_node_id: Id,
 }
 
 #[derive(Debug)]
 pub struct NodeTransferInfo {
-    pub src_monitor_id: i32,
-    pub src_desktop_id: i32,
-    pub src_node_id: i32,
-    pub dst_monitor_id: i32,
-    pub dst_desktop_id: i32,
-    pub dst_node_id: i32,
+    pub src_monitor_id: Id,
+    pub src_desktop_id: Id,
+    pub src_node_id: Id,
+    pub dst_monitor_id: Id,
+    pub dst_desktop_id: Id,
+    pub dst_node_id: Id,
 }
 
 #[derive(Debug)]
 pub struct NodeFocusInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
 }
 
 #[derive(Debug)]
 pub struct NodeActivateInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
 }
 
 #[derive(Debug)]
 pub struct NodePreselInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
     pub presel: Presel,
 }
 
 #[derive(Debug)]
 pub struct NodeStackInfo {
-    pub node_id_1: i32,
+    pub node_id_1: Id,
     pub stack: Stack,
-    pub node_id_2: i32,
+    pub node_id_2: Id,
 }
 
 #[derive(Debug)]
 pub struct NodeGeometryInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
     pub node_geometry: Rectangle,
 }
 
 #[derive(Debug)]
 pub struct NodeStateInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
     pub state: State,
     pub switch: Switch,
 }
 
 #[derive(Debug)]
 pub struct NodeFlagInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
     pub flag: Flag,
     pub switch: Switch,
 }
 
 #[derive(Debug)]
 pub struct NodeLayerInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
     pub layer: Layer,
 }
 
@@ -273,9 +273,9 @@ pub enum NodeEvent {
 
 #[derive(Debug)]
 pub struct PointerActionInfo {
-    pub monitor_id: i32,
-    pub desktop_id: i32,
-    pub node_id: i32,
+    pub monitor_id: Id,
+    pub desktop_id: Id,
+    pub node_id: Id,
     pub action: Action,
     pub action_state: ActionState,
 }

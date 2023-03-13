@@ -1,9 +1,10 @@
 use super::errors::ParseError;
+use crate::Id;
 use std::num::ParseIntError;
 
-pub(crate) fn from_hex_to_id(input: &str) -> Result<i32, ParseIntError> {
+pub(crate) fn from_hex_to_id(input: &str) -> Result<Id, ParseIntError> {
     let without_prefix = input.trim_start_matches("0x");
-    i32::from_str_radix(without_prefix, 16)
+    Id::from_str_radix(without_prefix, 16)
 }
 
 pub(super) fn process_event_reply<'a>(
