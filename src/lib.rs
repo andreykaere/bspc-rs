@@ -52,7 +52,7 @@ mod test {
         let mut conn = BspwmConnection::connect().unwrap();
         let subscriptions =
             vec![Subscription::All, Subscription::MonitorGeometry];
-        conn.subscribe(false, None, &subscriptions);
+        conn.subscribe(&subscriptions, false, None);
     }
 
     #[test]
@@ -60,7 +60,7 @@ mod test {
         let mut conn = BspwmConnection::connect().unwrap();
         // let subscriptions = vec![Subscription::Desktop];
         let subscriptions = vec![Subscription::Desktop, Subscription::Node];
-        conn.subscribe(false, None, &subscriptions);
+        conn.subscribe(&subscriptions, false, None);
 
         for event in conn.listen() {
             println!("{event:#?}");

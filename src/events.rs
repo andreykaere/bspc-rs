@@ -356,9 +356,9 @@ impl BspwmConnection {
     /// Subscribes to the given events
     pub fn subscribe(
         &mut self,
+        subscriptions: &[Subscription],
         fifo_flag: bool,
         count: Option<u32>,
-        subscriptions: &[Subscription],
     ) -> Result<(), ReplyError> {
         let all_subscriptions = &subscriptions
             .iter()
