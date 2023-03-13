@@ -3,9 +3,10 @@ use std::os::unix::net::UnixStream;
 use std::string::ToString;
 use strum_macros::Display;
 
+use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
 use crate::properties::*;
-use crate::BspcCommunication;
+use crate::BspwmConnection;
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]
@@ -347,6 +348,47 @@ impl<'a> Iterator for EventIterator<'a> {
             }
 
             Err(e) => Some(Err(e)),
+        }
+    }
+}
+
+impl BspwmConnection {
+    /// Subscribes to the given events
+    pub fn subscribe(
+        &mut self,
+        fifo: Option<()>,
+        count: Option<u32>,
+        subscriptions: &[Subscription],
+    ) -> Result<(), ReplyError> {
+        let all_subscriptions = &subscriptions
+            .iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join("\x00");
+
+        let mut count_option = String::new();
+        let mut fifo_option = "";
+
+        if let Some(x) = count {
+            count_option = format!("--count\x00{}\x00", x);
+        }
+
+        if let Some(()) = fifo {
+            fifo_option = "--fifo\x00";
+        }
+        let subscribe_message = format!(
+            "subscribe\x00{}{}{}\x00",
+            fifo_option, count_option, all_subscriptions
+        );
+
+        self.stream.send_message(&subscribe_message)
+    }
+
+    /// Listen to the subscriptions
+    pub fn listen(&mut self) -> EventIterator {
+        EventIterator {
+            stream: &mut self.stream,
+            cache: VecDeque::new(),
         }
     }
 }

@@ -1,5 +1,5 @@
 use super::errors::ParseError;
-use super::utils::{from_hex, get_event_type, process_event_reply};
+use super::utils::{from_hex_to_id, get_event_type, process_event_reply};
 use crate::events::*;
 
 use std::str::FromStr;
@@ -43,9 +43,9 @@ impl FromStr for PointerActionInfo {
         let reply = process_event_reply(input, "pointer_action", 5)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
             action: reply[4].parse()?,
             action_state: reply[5].parse()?,
         })

@@ -7,7 +7,7 @@ impl FromStr for MonitorAddInfo {
         let reply = process_event_reply(input, "monitor_add", 3)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
+            monitor_id: from_hex_to_id(reply[1])?,
             monitor_name: reply[2].to_string(),
             monitor_geometry: reply[3].parse()?,
         })
@@ -21,7 +21,7 @@ impl FromStr for MonitorRenameInfo {
         let reply = process_event_reply(input, "monitor_rename", 3)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
+            monitor_id: from_hex_to_id(reply[1])?,
             old_name: reply[2].to_string(),
             new_name: reply[3].to_string(),
         })
@@ -35,7 +35,7 @@ impl FromStr for MonitorRemoveInfo {
         let reply = process_event_reply(input, "monitor_remove", 1)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
+            monitor_id: from_hex_to_id(reply[1])?,
         })
     }
 }
@@ -47,8 +47,8 @@ impl FromStr for MonitorSwapInfo {
         let reply = process_event_reply(input, "monitor_swap", 2)?;
 
         Ok(Self {
-            src_monitor_id: from_hex(reply[1])?,
-            dst_monitor_id: from_hex(reply[2])?,
+            src_monitor_id: from_hex_to_id(reply[1])?,
+            dst_monitor_id: from_hex_to_id(reply[2])?,
         })
     }
 }
@@ -60,7 +60,7 @@ impl FromStr for MonitorFocusInfo {
         let reply = process_event_reply(input, "monitor_focus", 1)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
+            monitor_id: from_hex_to_id(reply[1])?,
         })
     }
 }
@@ -72,7 +72,7 @@ impl FromStr for MonitorGeometryInfo {
         let reply = process_event_reply(input, "monitor_geometry", 2)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
+            monitor_id: from_hex_to_id(reply[1])?,
             monitor_geometry: reply[2].parse()?,
         })
     }

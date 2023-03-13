@@ -7,10 +7,10 @@ impl FromStr for NodeAddInfo {
         let reply = process_event_reply(input, "node_add", 4)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            ip_id: from_hex(reply[3])?,
-            node_id: from_hex(reply[4])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            ip_id: from_hex_to_id(reply[3])?,
+            node_id: from_hex_to_id(reply[4])?,
         })
     }
 }
@@ -22,9 +22,9 @@ impl FromStr for NodeRemoveInfo {
         let reply = process_event_reply(input, "node_remove", 3)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
         })
     }
 }
@@ -36,12 +36,12 @@ impl FromStr for NodeSwapInfo {
         let reply = process_event_reply(input, "node_swap", 6)?;
 
         Ok(Self {
-            src_monitor_id: from_hex(reply[1])?,
-            src_desktop_id: from_hex(reply[2])?,
-            src_node_id: from_hex(reply[3])?,
-            dst_monitor_id: from_hex(reply[4])?,
-            dst_desktop_id: from_hex(reply[5])?,
-            dst_node_id: from_hex(reply[6])?,
+            src_monitor_id: from_hex_to_id(reply[1])?,
+            src_desktop_id: from_hex_to_id(reply[2])?,
+            src_node_id: from_hex_to_id(reply[3])?,
+            dst_monitor_id: from_hex_to_id(reply[4])?,
+            dst_desktop_id: from_hex_to_id(reply[5])?,
+            dst_node_id: from_hex_to_id(reply[6])?,
         })
     }
 }
@@ -53,12 +53,12 @@ impl FromStr for NodeTransferInfo {
         let reply = process_event_reply(input, "node_transfer", 6)?;
 
         Ok(Self {
-            src_monitor_id: from_hex(reply[1])?,
-            src_desktop_id: from_hex(reply[2])?,
-            src_node_id: from_hex(reply[3])?,
-            dst_monitor_id: from_hex(reply[4])?,
-            dst_desktop_id: from_hex(reply[5])?,
-            dst_node_id: from_hex(reply[6])?,
+            src_monitor_id: from_hex_to_id(reply[1])?,
+            src_desktop_id: from_hex_to_id(reply[2])?,
+            src_node_id: from_hex_to_id(reply[3])?,
+            dst_monitor_id: from_hex_to_id(reply[4])?,
+            dst_desktop_id: from_hex_to_id(reply[5])?,
+            dst_node_id: from_hex_to_id(reply[6])?,
         })
     }
 }
@@ -70,9 +70,9 @@ impl FromStr for NodeFocusInfo {
         let reply = process_event_reply(input, "node_focus", 3)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
         })
     }
 }
@@ -84,9 +84,9 @@ impl FromStr for NodeActivateInfo {
         let reply = process_event_reply(input, "node_activate", 3)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
         })
     }
 }
@@ -98,9 +98,9 @@ impl FromStr for NodePreselInfo {
         let reply = process_event_reply(input, "node_presel", 4)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
             presel: reply[4].parse()?,
         })
     }
@@ -113,9 +113,9 @@ impl FromStr for NodeStackInfo {
         let reply = process_event_reply(input, "node_stack", 3)?;
 
         Ok(Self {
-            node_id_1: from_hex(reply[1])?,
+            node_id_1: from_hex_to_id(reply[1])?,
             stack: reply[2].parse()?,
-            node_id_2: from_hex(reply[3])?,
+            node_id_2: from_hex_to_id(reply[3])?,
         })
     }
 }
@@ -127,9 +127,9 @@ impl FromStr for NodeLayerInfo {
         let reply = process_event_reply(input, "node_layer", 4)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
             layer: reply[4].parse()?,
         })
     }
@@ -142,9 +142,9 @@ impl FromStr for NodeFlagInfo {
         let reply = process_event_reply(input, "node_flag", 5)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
             flag: reply[4].parse()?,
             switch: reply[5].parse()?,
         })
@@ -158,9 +158,9 @@ impl FromStr for NodeStateInfo {
         let reply = process_event_reply(input, "node_state", 5)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
             state: reply[4].parse()?,
             switch: reply[5].parse()?,
         })
@@ -174,9 +174,9 @@ impl FromStr for NodeGeometryInfo {
         let reply = process_event_reply(input, "node_geometry", 4)?;
 
         Ok(Self {
-            monitor_id: from_hex(reply[1])?,
-            desktop_id: from_hex(reply[2])?,
-            node_id: from_hex(reply[3])?,
+            monitor_id: from_hex_to_id(reply[1])?,
+            desktop_id: from_hex_to_id(reply[2])?,
+            node_id: from_hex_to_id(reply[3])?,
             node_geometry: reply[4].parse()?,
         })
     }

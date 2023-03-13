@@ -1,7 +1,7 @@
 use super::errors::ParseError;
 use std::num::ParseIntError;
 
-pub(super) fn from_hex(input: &str) -> Result<i32, ParseIntError> {
+pub(crate) fn from_hex_to_id(input: &str) -> Result<i32, ParseIntError> {
     let without_prefix = input.trim_start_matches("0x");
     i32::from_str_radix(without_prefix, 16)
 }
@@ -44,6 +44,6 @@ mod test {
 
     #[test]
     fn parse_hex() {
-        println!("{:?}", from_hex("0x00200002"));
+        println!("{:?}", from_hex_to_id("0x00200002"));
     }
 }

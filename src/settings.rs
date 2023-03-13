@@ -4,8 +4,9 @@ use std::string::ToString;
 use strum_macros::Display;
 use strum_macros::EnumString;
 
+use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
-use crate::{BspcCommunication, BspwmConnection};
+use crate::BspwmConnection;
 
 #[derive(Debug, Clone, Copy, EnumString, Display)]
 #[strum(serialize_all = "snake_case")]
