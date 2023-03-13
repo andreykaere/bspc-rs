@@ -13,8 +13,8 @@ pub mod selectors;
 pub mod settings;
 pub mod tree;
 
-pub use errors::{ParseError, ReplyError};
-pub use events::{Event, EventIterator, Subscription};
+use errors::{ParseError, ReplyError};
+use events::{Event, EventIterator, Subscription};
 
 pub type Id = u32;
 

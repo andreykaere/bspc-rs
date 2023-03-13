@@ -10,14 +10,19 @@ pub trait BspcCommunication {
 
 impl BspcCommunication for UnixStream {
     fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
+        println!("write start");
         self.write_all(message.as_bytes())?;
+        println!("write end");
+
         Ok(())
     }
 
     fn receive_message(&mut self) -> Result<String, ReplyError> {
         // https://unix.stackexchange.com/questions/424380/what-values-may-linux-use-for-the-default-unix-socket-buffer-size
         let mut buf = [0u8; 212992];
+        println!("read start");
         let len = self.read(&mut buf)?;
+        println!("read end");
 
         if len == 0 {
             return Ok(String::new());

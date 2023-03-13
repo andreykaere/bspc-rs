@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
+use crate::errors::ReplyError;
 use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
-use crate::Id;
+use crate::query::QueryOptions;
+use crate::{BspwmConnection, Id};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {
@@ -95,18 +97,47 @@ pub enum Tree {
     Monitor(Monitor),
 }
 
-// impl From<Id> for Node {
-//     fn from(id: Id) -> Self {
-//         let tree = query_tree();
+impl BspwmConnection {
+    pub fn from_id_to_node(
+        &mut self,
+        id: Id,
+    ) -> Result<Option<Node>, ReplyError> {
+        let tree_raw = self.query_tree(QueryOptions::Monitor)?;
+        let tree = if let Tree::Monitor(mon) = tree_raw {
+            mon
+        } else {
+            unreachable!();
+        };
 
-//         todo!();
-//     }
-// }
+        for desktop in tree.desktops {
+            let root = desktop.root;
+
+            if let Some(root) = root {
+                if let Some(first_child) = root.first_child {
+                    if first_child.id == id {
+                        return Ok(Some(*first_child));
+                    }
+                }
+
+                if let Some(second_child) = root.second_child {
+                    if second_child.id == id {
+                        return Ok(Some(*second_child));
+                    }
+                }
+            }
+        }
+
+        Ok(None)
+    }
+}
 
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::events::*;
     use std::process::Command;
+    use std::thread;
+    use std::time::Duration;
 
     #[test]
     fn parse_tree() {
@@ -120,5 +151,20 @@ mod test {
         let monitor: Monitor = serde_json::from_str(monitor).unwrap();
 
         println!("{:#?}", monitor);
+    }
+
+    #[test]
+    fn test_from_id_to_node() {
+        let mut conn = BspwmConnection::connect().unwrap();
+        let window_id =
+            conn.query_nodes(None, None, None, Some("focused")).unwrap()[0];
+        let window_id2 =
+            conn.query_nodes(None, None, None, Some("focused")).unwrap()[0];
+
+        // thread::sleep(Duration::from_millis(1000));
+
+        // let node = conn.from_id_to_node(window_id).unwrap().unwrap();
+
+        // println!("{node:#?}");
     }
 }

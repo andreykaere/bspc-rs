@@ -1,12 +1,15 @@
+use std::string::ToString;
+use strum_macros::Display;
+
 use crate::communication::BspcCommunication;
 use crate::errors::ReplyError;
+use crate::parser::utils::from_hex_to_id;
 use crate::selectors::Selector;
+use crate::tree::{Node, Tree};
 use crate::{BspwmConnection, Id};
 
-use crate::parser::utils::from_hex_to_id;
-use crate::tree::Node;
-use crate::tree::Tree;
-
+#[derive(Debug, Display)]
+#[strum(serialize_all = "snake_case")]
 pub enum QueryOptions {
     Monitor,
     Desktop,
@@ -50,7 +53,7 @@ impl BspwmConnection {
         }
 
         let message = format!("query\x00{}\x00", request);
-        self.send_message(&message);
+        self.send_message(&message)?;
 
         let reply = self.receive_message()?;
         let mut ids = Vec::new();
@@ -120,10 +123,25 @@ impl BspwmConnection {
 
     pub fn query_tree(
         &mut self,
-        options: QueryOptions,
-        selector: &str,
-    ) -> Tree {
-        todo!();
+        option: QueryOptions,
+    ) -> Result<Tree, ReplyError> {
+        let message =
+            format!("query\x00--tree\x00--{}\x00", option.to_string());
+        self.send_message(&message)?;
+
+        let reply = self.receive_message()?;
+
+        match option {
+            QueryOptions::Monitor => {
+                Ok(Tree::Monitor(serde_json::from_str(&reply)?))
+            }
+
+            QueryOptions::Desktop => {
+                Ok(Tree::Desktop(serde_json::from_str(&reply)?))
+            }
+
+            QueryOptions::Node => Ok(Tree::Node(serde_json::from_str(&reply)?)),
+        }
     }
 }
 
@@ -148,5 +166,13 @@ mod test {
         // let subscriptions =
         //     vec![Subscription::All, Subscription::MonitorGeometry];
         // conn.subscribe(None, None, &subscriptions);
+    }
+
+    #[test]
+    fn test_query_tree() {
+        let mut conn = BspwmConnection::connect().unwrap();
+        let tree = conn.query_tree(QueryOptions::Monitor).unwrap();
+
+        println!("{tree:#?}");
     }
 }
