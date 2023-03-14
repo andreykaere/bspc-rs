@@ -26,7 +26,16 @@ impl BspcCommunication for UnixStream {
     }
 
     fn receive_message(&mut self) -> Result<String, ReplyError> {
-        todo!();
+        let mut buf = Vec::new();
+        self.read_to_end(&mut buf)?;
+
+        if buf[0] == 7 {
+            let reply = String::from_utf8((&buf[1..]).to_vec())?;
+            return Err(ReplyError::RequestFailed(reply));
+        }
+
+        let reply = String::from_utf8(buf)?;
+        Ok(reply)
     }
 
     // fn receive_message(&mut self) -> Result<String, ReplyError> {

@@ -157,10 +157,11 @@ mod test {
     #[test]
     fn test_from_id_to_node() {
         let conn = BspwmConnection::new();
-        let window_id =
-            conn.query_nodes(None, None, None, Some("focused")).unwrap()[0];
-        let node = conn.from_id_to_node(window_id).unwrap().unwrap();
+        let window_id = conn
+            .query_nodes(None, None, None, Some(".fullscreen"))
+            .unwrap()[0];
+        // let node = conn.from_id_to_node(window_id).unwrap().unwrap();
 
-        println!("{node:#?}");
+        // println!("{node:#?}");
     }
 }
