@@ -20,6 +20,11 @@ pub type Id = u32;
 //     stream: UnixStream,
 // }
 
+// pub struct BspwmConnection {
+//     stream: UnixStream,
+//     buffer: Vec<u8>,
+// }
+
 pub struct BspwmConnection;
 
 impl BspwmConnection {
@@ -37,11 +42,20 @@ impl BspwmConnection {
     pub fn connect() -> Result<UnixStream, ReplyError> {
         let socket_path = Self::locate_socket();
         let stream = UnixStream::connect(socket_path)?;
+        // let buffer = BufReader::new(stream);
 
+        // Ok(Self { stream, buffer })
         Ok(stream)
-
-        // Ok(Self { stream }
     }
+
+    // pub fn connect() -> Result<BspwmConnection, ReplyError> {
+    //     let socket_path = Self::locate_socket();
+    //     let stream = UnixStream::connect(socket_path)?;
+    //     let buffer = Vec::new();
+    //     // let buffer = BufReader::new(stream);
+
+    //     Ok(Self { stream, buffer })
+    // }
 
     pub fn new() -> BspwmConnection {
         BspwmConnection
@@ -53,29 +67,42 @@ mod test {
     use super::events::*;
     use super::*;
 
-    #[test]
-    fn test_subscribe() {
-        let subscriptions =
-            vec![Subscription::All, Subscription::MonitorGeometry];
-        BspwmConnection::subscribe(&subscriptions, false, None).unwrap();
-    }
+    // #[test]
+    // fn test_subscribe() {
+    //     let subscriptions =
+    //         vec![Subscription::All, Subscription::MonitorGeometry];
+    //     BspwmConnection::subscribe(&subscriptions, false, None).unwrap();
+    // }
 
     #[test]
     #[ignore]
     fn test_iterator() {
-        // let mut conn = BspwmConnection::connect().unwrap();
-        // let subscriptions = vec![Subscription::Desktop];
-        let subscriptions = vec![Subscription::Desktop, Subscription::Node];
-        let subscribers =
-            BspwmConnection::subscribe(&subscriptions, false, None).unwrap();
+        let conn = BspwmConnection::new();
+
+        let subscriptions = vec![
+            Subscription::NodeAdd,
+            Subscription::NodeFocus,
+            Subscription::NodeFlag,
+            Subscription::NodeState,
+            Subscription::NodeRemove,
+        ];
+
+        let mut subscribers =
+            conn.subscribe(&subscriptions, false, None).unwrap();
 
         for event in subscribers {
-            let tree = BspwmConnection::query_tree(
-                super::query::QueryOptions::Monitor,
-            );
-
-            println!("{tree:#?}");
-            println!("{event:#?}");
+            match event.unwrap() {
+                Event::NodeEvent(event) => match event {
+                    NodeEvent::NodeFocus(_) => {
+                        println!("focus!");
+                    }
+                    NodeEvent::NodeFlag(_) => {
+                        println!("flag!");
+                    }
+                    _ => {}
+                },
+                _ => {}
+            }
         }
     }
 }

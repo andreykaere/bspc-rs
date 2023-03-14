@@ -99,33 +99,37 @@ pub enum Tree {
 
 impl BspwmConnection {
     pub fn from_id_to_node(&self, id: Id) -> Result<Option<Node>, ReplyError> {
-        let tree_raw = self.query_tree(QueryOptions::Monitor)?;
-        let tree = if let Tree::Monitor(mon) = tree_raw {
-            mon
-        } else {
-            unreachable!();
-        };
-
-        for desktop in tree.desktops {
-            let root = desktop.root;
-
-            if let Some(root) = root {
-                if let Some(first_child) = root.first_child {
-                    if first_child.id == id {
-                        return Ok(Some(*first_child));
-                    }
-                }
-
-                if let Some(second_child) = root.second_child {
-                    if second_child.id == id {
-                        return Ok(Some(*second_child));
-                    }
-                }
-            }
-        }
-
-        Ok(None)
+        todo!();
     }
+    //     let tree_raw = self.query_tree(QueryOptions::Monitor)?;
+    //     let tree = if let Tree::Monitor(mon) = tree_raw {
+    //         mon
+    //     } else {
+    //         unreachable!();
+    //     };
+
+    //     for desktop in tree.desktops {
+    //         let root = desktop.root;
+
+    //         if let Some(root) = root {
+    //             while let None = root.client {
+    //                 if let Some(first_child) = root.first_child {
+    //                     if first_child.id == id {
+    //                         return Ok(Some(*first_child));
+    //                     }
+    //                 }
+
+    //                 if let Some(second_child) = root.second_child {
+    //                     if second_child.id == id {
+    //                         return Ok(Some(*second_child));
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     Ok(None)
+    // }
 }
 
 #[cfg(test)]
@@ -152,12 +156,10 @@ mod test {
 
     #[test]
     fn test_from_id_to_node() {
+        let conn = BspwmConnection::new();
         let window_id =
-            BspwmConnection::query_nodes(None, None, None, Some("focused"))
-                .unwrap()[0];
-        let node = BspwmConnection::from_id_to_node(window_id)
-            .unwrap()
-            .unwrap();
+            conn.query_nodes(None, None, None, Some("focused")).unwrap()[0];
+        let node = conn.from_id_to_node(window_id).unwrap().unwrap();
 
         println!("{node:#?}");
     }

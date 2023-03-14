@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::io::BufRead;
+use std::io::BufReader;
 use std::os::unix::net::UnixStream;
 use std::string::ToString;
 use strum_macros::Display;
@@ -314,19 +316,25 @@ pub enum Event {
 
 #[derive(Debug)]
 pub struct EventIterator {
-    pub(super) stream: UnixStream,
+    stream_buf: BufReader<UnixStream>,
 }
 
 impl Iterator for EventIterator {
     type Item = Result<Event, ReplyError>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        match self.stream.receive_message() {
-            Ok(reply) => {
+        // for line in self.stream_buf.lines() {
+        //     match line {
+        let mut reply = String::new();
+        let result = self.stream_buf.read_line(&mut reply);
+
+        match result {
+            Ok(_) => {
                 let event = reply.parse::<Event>().map_err(From::from);
                 Some(event)
             }
-            Err(e) => Some(Err(e)),
+
+            Err(e) => Some((Err(e)).map_err(From::from)),
         }
     }
 }
@@ -365,7 +373,9 @@ impl BspwmConnection {
 
         conn.send_message(&subscribe_message)?;
 
-        Ok(EventIterator { stream: conn })
+        Ok(EventIterator {
+            stream_buf: BufReader::new(conn),
+        })
     }
 
     // /// Listen to the subscriptions

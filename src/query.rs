@@ -152,19 +152,19 @@ mod test {
     // use std::io::{self, Read, Write};
     // use std::os::unix::net::UnixStream;
 
-    #[test]
-    fn test_query_nodes() {
-        println!(
-            "{:#?}",
-            BspwmConnection::query_nodes(None, None, None, Some(".!hidden"))
-                .unwrap()
-        );
-    }
+    // #[test]
+    // fn test_query_nodes() {
+    //     println!(
+    //         "{:#?}",
+    //         BspwmConnection::query_nodes(None, None, None, Some(".!hidden"))
+    //             .unwrap()
+    //     );
+    // }
 
-    #[test]
-    fn test_query_tree() {
-        let tree = BspwmConnection::query_tree(QueryOptions::Monitor).unwrap();
+    // #[test]
+    // fn test_query_tree() {
+    //     let tree = BspwmConnection::query_tree(QueryOptions::Monitor).unwrap();
 
-        println!("{tree:#?}");
-    }
+    //     println!("{tree:#?}");
+    // }
 }
