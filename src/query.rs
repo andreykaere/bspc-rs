@@ -18,7 +18,6 @@ pub enum QueryOptions {
 
 impl BspwmConnection {
     fn query(
-        &mut self,
         query_type: &str,
         names_flag: bool,
         selector: Option<&str>,
@@ -26,6 +25,7 @@ impl BspwmConnection {
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
+        let mut conn = BspwmConnection::connect()?;
         let mut request = format!("--{query_type}");
 
         if names_flag {
@@ -53,9 +53,9 @@ impl BspwmConnection {
         }
 
         let message = format!("query\x00{}\x00", request);
-        self.send_message(&message)?;
+        conn.send_message(&message)?;
 
-        let reply = self.receive_message()?;
+        let reply = conn.receive_message()?;
         let mut ids = Vec::new();
 
         for node_id in reply.split('\n') {
@@ -69,13 +69,12 @@ impl BspwmConnection {
     }
 
     pub fn query_nodes(
-        &mut self,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        self.query(
+        Self::query(
             "nodes",
             false,
             selector,
@@ -86,14 +85,13 @@ impl BspwmConnection {
     }
 
     pub fn query_desktops(
-        &mut self,
         names_flag: bool,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        self.query(
+        Self::query(
             "desktops",
             names_flag,
             selector,
@@ -104,14 +102,13 @@ impl BspwmConnection {
     }
 
     pub fn query_monitors(
-        &mut self,
         names_flag: bool,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        self.query(
+        Self::query(
             "monitors",
             names_flag,
             selector,
@@ -121,15 +118,13 @@ impl BspwmConnection {
         )
     }
 
-    pub fn query_tree(
-        &mut self,
-        option: QueryOptions,
-    ) -> Result<Tree, ReplyError> {
+    pub fn query_tree(option: QueryOptions) -> Result<Tree, ReplyError> {
+        let mut conn = BspwmConnection::connect()?;
         let message =
             format!("query\x00--tree\x00--{}\x00", option.to_string());
-        self.send_message(&message)?;
+        conn.send_message(&message)?;
 
-        let reply = self.receive_message()?;
+        let reply = conn.receive_message()?;
 
         match option {
             QueryOptions::Monitor => {
@@ -155,23 +150,16 @@ mod test {
 
     #[test]
     fn test_query_nodes() {
-        let mut conn = BspwmConnection::connect().unwrap();
-        // conn.query_nodes(".fullscreen").unwrap();
-        // conn.query_nodes(".fullscreen.!hidden");
         println!(
             "{:#?}",
-            conn.query_nodes(None, None, None, Some(".!hidden"))
+            BspwmConnection::query_nodes(None, None, None, Some(".!hidden"))
                 .unwrap()
         );
-        // let subscriptions =
-        //     vec![Subscription::All, Subscription::MonitorGeometry];
-        // conn.subscribe(None, None, &subscriptions);
     }
 
     #[test]
     fn test_query_tree() {
-        let mut conn = BspwmConnection::connect().unwrap();
-        let tree = conn.query_tree(QueryOptions::Monitor).unwrap();
+        let tree = BspwmConnection::query_tree(QueryOptions::Monitor).unwrap();
 
         println!("{tree:#?}");
     }

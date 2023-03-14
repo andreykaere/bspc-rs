@@ -2,6 +2,7 @@ use core::fmt;
 use std::error::Error;
 use std::num::{ParseFloatError, ParseIntError};
 use std::str::ParseBoolError;
+use std::string::FromUtf8Error;
 
 #[derive(Debug)]
 #[non_exhaustive]
@@ -55,6 +56,12 @@ impl From<serde_json::Error> for ParseError {
 
 impl From<strum::ParseError> for ParseError {
     fn from(_error: strum::ParseError) -> ParseError {
+        ParseError::ConversionFailed
+    }
+}
+
+impl From<FromUtf8Error> for ParseError {
+    fn from(_error: FromUtf8Error) -> ParseError {
         ParseError::ConversionFailed
     }
 }

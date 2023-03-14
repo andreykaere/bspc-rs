@@ -98,11 +98,8 @@ pub enum Tree {
 }
 
 impl BspwmConnection {
-    pub fn from_id_to_node(
-        &mut self,
-        id: Id,
-    ) -> Result<Option<Node>, ReplyError> {
-        let tree_raw = self.query_tree(QueryOptions::Monitor)?;
+    pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
+        let tree_raw = BspwmConnection::query_tree(QueryOptions::Monitor)?;
         let tree = if let Tree::Monitor(mon) = tree_raw {
             mon
         } else {
@@ -155,16 +152,13 @@ mod test {
 
     #[test]
     fn test_from_id_to_node() {
-        let mut conn = BspwmConnection::connect().unwrap();
         let window_id =
-            conn.query_nodes(None, None, None, Some("focused")).unwrap()[0];
-        let window_id2 =
-            conn.query_nodes(None, None, None, Some("focused")).unwrap()[0];
+            BspwmConnection::query_nodes(None, None, None, Some("focused"))
+                .unwrap()[0];
+        let node = BspwmConnection::from_id_to_node(window_id)
+            .unwrap()
+            .unwrap();
 
-        // thread::sleep(Duration::from_millis(1000));
-
-        // let node = conn.from_id_to_node(window_id).unwrap().unwrap();
-
-        // println!("{node:#?}");
+        println!("{node:#?}");
     }
 }

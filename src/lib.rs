@@ -1,6 +1,4 @@
-use std::collections::VecDeque;
 use std::env;
-use std::io::{self, Read, Write};
 use std::os::unix::net::UnixStream;
 
 pub mod communication;
@@ -52,51 +50,25 @@ mod test {
         let mut conn = BspwmConnection::connect().unwrap();
         let subscriptions =
             vec![Subscription::All, Subscription::MonitorGeometry];
-        conn.subscribe(&subscriptions, false, None);
+        BspwmConnection::subscribe(&subscriptions, false, None);
     }
 
     #[test]
+    #[ignore]
     fn test_iterator() {
-        let mut conn = BspwmConnection::connect().unwrap();
+        // let mut conn = BspwmConnection::connect().unwrap();
         // let subscriptions = vec![Subscription::Desktop];
         let subscriptions = vec![Subscription::Desktop, Subscription::Node];
-        conn.subscribe(&subscriptions, false, None);
+        let subscribers =
+            BspwmConnection::subscribe(&subscriptions, false, None).unwrap();
 
-        for event in conn.listen() {
+        for event in subscribers {
+            let tree = BspwmConnection::query_tree(
+                super::query::QueryOptions::Monitor,
+            );
+
+            println!("{tree:#?}");
             println!("{event:#?}");
         }
     }
-    // #[test]
-    // fn test_subscribe() -> Result<(), Box<dyn Error>> {
-    //     let mut stream = UnixStream::connect("/tmp/bspwm_0_0-socket")?;
-    //     let mut buf = [0u8; 1024];
-
-    //     stream.write_all(b"subscribe\x00node\x00")?;
-
-    //     loop {
-    //         let len = stream.read(&mut buf)?;
-
-    //         println!("{len}");
-    //         if len == 0 {
-    //             break;
-    //         }
-
-    //         let response = String::from_utf8_lossy(&buf[..len]);
-
-    //         // println!("{response}");
-    //         // let reply = response.parse::<NodeEvent>();
-
-    //         for res in response.split('\n') {
-    //             if res.is_empty() {
-    //                 continue;
-    //             }
-
-    //             let inn_reply = res.parse::<NodeEvent>()?;
-
-    //             println!("{inn_reply:#?}");
-    //         }
-    //     }
-
-    //     Ok(())
-    // }
 }

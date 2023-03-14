@@ -1,4 +1,4 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 use std::os::unix::net::UnixStream;
 use std::string::ToString;
 use strum_macros::Display;
@@ -312,41 +312,20 @@ pub enum Event {
     PointerAction(PointerActionInfo),
 }
 
-pub struct EventIterator<'a> {
-    pub(super) stream: &'a mut UnixStream,
-
-    // This is needed if by one `read` we obtain more, than one events.
-    // Whenever it happens, we push these back and take one from the front.
-    pub(super) cache: VecDeque<Result<Event, ReplyError>>,
+#[derive(Debug)]
+pub struct EventIterator {
+    pub(super) stream: UnixStream,
 }
 
-impl<'a> Iterator for EventIterator<'a> {
+impl Iterator for EventIterator {
     type Item = Result<Event, ReplyError>;
 
     fn next(&mut self) -> Option<Self::Item> {
         match self.stream.receive_message() {
             Ok(reply) => {
-                let mut new_cache = VecDeque::new();
-
-                for res in reply.split('\n') {
-                    if res.is_empty() {
-                        continue;
-                    }
-
-                    let event = res.parse::<Event>().map_err(From::from);
-
-                    new_cache.push_back(event);
-                }
-
-                self.cache.append(&mut new_cache);
-                match self.cache.pop_front() {
-                    Some(x) => Some(x),
-                    None => Some(Err(ReplyError::ParseError(
-                        ParseError::InsufficientData,
-                    ))),
-                }
+                let event = reply.parse::<Event>().map_err(From::from);
+                Some(event)
             }
-
             Err(e) => Some(Err(e)),
         }
     }
@@ -355,11 +334,12 @@ impl<'a> Iterator for EventIterator<'a> {
 impl BspwmConnection {
     /// Subscribes to the given events
     pub fn subscribe(
-        &mut self,
         subscriptions: &[Subscription],
         fifo_flag: bool,
         count: Option<u32>,
-    ) -> Result<(), ReplyError> {
+    ) -> Result<EventIterator, ReplyError> {
+        let mut conn = BspwmConnection::connect()?;
+
         let all_subscriptions = &subscriptions
             .iter()
             .map(|x| x.to_string())
@@ -382,14 +362,18 @@ impl BspwmConnection {
             fifo_option, count_option, all_subscriptions
         );
 
-        self.stream.send_message(&subscribe_message)
+        conn.send_message(&subscribe_message)?;
+
+        Ok(EventIterator {
+            stream: conn.stream,
+        })
     }
 
-    /// Listen to the subscriptions
-    pub fn listen(&mut self) -> EventIterator {
-        EventIterator {
-            stream: &mut self.stream,
-            cache: VecDeque::new(),
-        }
-    }
+    // /// Listen to the subscriptions
+    // pub fn listen(&mut self) -> EventIterator {
+    //     EventIterator {
+    //         stream: &mut self.stream,
+    //         cache: VecDeque::new(),
+    //     }
+    // }
 }
