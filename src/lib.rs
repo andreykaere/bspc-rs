@@ -7,8 +7,8 @@ pub mod events;
 mod parser;
 pub mod properties;
 pub mod query;
-pub mod selectors;
-pub mod settings;
+// pub mod selectors;
+// pub mod settings;
 pub mod tree;
 
 use errors::{ParseError, ReplyError};
@@ -16,9 +16,11 @@ use events::{Event, EventIterator, Subscription};
 
 pub type Id = u32;
 
-pub struct BspwmConnection {
-    stream: UnixStream,
-}
+// pub struct BspwmConnection {
+//     stream: UnixStream,
+// }
+
+pub struct BspwmConnection;
 
 impl BspwmConnection {
     fn locate_socket() -> String {
@@ -32,11 +34,17 @@ impl BspwmConnection {
         }
     }
 
-    pub fn connect() -> Result<BspwmConnection, ReplyError> {
+    pub fn connect() -> Result<UnixStream, ReplyError> {
         let socket_path = Self::locate_socket();
         let stream = UnixStream::connect(socket_path)?;
 
-        Ok(Self { stream })
+        Ok(stream)
+
+        // Ok(Self { stream }
+    }
+
+    pub fn new() -> BspwmConnection {
+        BspwmConnection
     }
 }
 
@@ -47,10 +55,9 @@ mod test {
 
     #[test]
     fn test_subscribe() {
-        let mut conn = BspwmConnection::connect().unwrap();
         let subscriptions =
             vec![Subscription::All, Subscription::MonitorGeometry];
-        BspwmConnection::subscribe(&subscriptions, false, None);
+        BspwmConnection::subscribe(&subscriptions, false, None).unwrap();
     }
 
     #[test]

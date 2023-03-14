@@ -334,6 +334,7 @@ impl Iterator for EventIterator {
 impl BspwmConnection {
     /// Subscribes to the given events
     pub fn subscribe(
+        &self,
         subscriptions: &[Subscription],
         fifo_flag: bool,
         count: Option<u32>,
@@ -364,9 +365,7 @@ impl BspwmConnection {
 
         conn.send_message(&subscribe_message)?;
 
-        Ok(EventIterator {
-            stream: conn.stream,
-        })
+        Ok(EventIterator { stream: conn })
     }
 
     // /// Listen to the subscriptions

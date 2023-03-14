@@ -43,11 +43,11 @@ impl BspcCommunication for UnixStream {
     }
 }
 
-impl BspcCommunication for BspwmConnection {
-    fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
-        self.stream.send_message(message)
-    }
-    fn receive_message(&mut self) -> Result<String, ReplyError> {
-        self.stream.receive_message()
-    }
-}
+// impl BspcCommunication for BspwmConnection {
+//     fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
+//         self.stream.send_message(message)
+//     }
+//     fn receive_message(&mut self) -> Result<String, ReplyError> {
+//         self.stream.receive_message()
+//     }
+// }

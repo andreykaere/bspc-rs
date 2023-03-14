@@ -4,7 +4,7 @@ use strum_macros::Display;
 use crate::communication::BspcCommunication;
 use crate::errors::ReplyError;
 use crate::parser::utils::from_hex_to_id;
-use crate::selectors::Selector;
+// use crate::selectors::Selector;
 use crate::tree::{Node, Tree};
 use crate::{BspwmConnection, Id};
 
@@ -18,6 +18,7 @@ pub enum QueryOptions {
 
 impl BspwmConnection {
     fn query(
+        &self,
         query_type: &str,
         names_flag: bool,
         selector: Option<&str>,
@@ -69,12 +70,13 @@ impl BspwmConnection {
     }
 
     pub fn query_nodes(
+        &self,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        Self::query(
+        self.query(
             "nodes",
             false,
             selector,
@@ -85,13 +87,14 @@ impl BspwmConnection {
     }
 
     pub fn query_desktops(
+        &self,
         names_flag: bool,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        Self::query(
+        self.query(
             "desktops",
             names_flag,
             selector,
@@ -102,13 +105,14 @@ impl BspwmConnection {
     }
 
     pub fn query_monitors(
+        &self,
         names_flag: bool,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        Self::query(
+        self.query(
             "monitors",
             names_flag,
             selector,
@@ -118,7 +122,7 @@ impl BspwmConnection {
         )
     }
 
-    pub fn query_tree(option: QueryOptions) -> Result<Tree, ReplyError> {
+    pub fn query_tree(&self, option: QueryOptions) -> Result<Tree, ReplyError> {
         let mut conn = BspwmConnection::connect()?;
         let message =
             format!("query\x00--tree\x00--{}\x00", option.to_string());
