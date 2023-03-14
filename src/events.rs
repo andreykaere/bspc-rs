@@ -8,7 +8,7 @@ use strum_macros::Display;
 use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
 use crate::properties::*;
-use crate::{BspwmConnection, Id};
+use crate::Id;
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]
@@ -323,8 +323,6 @@ impl Iterator for EventIterator {
     type Item = Result<Event, ReplyError>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        // for line in self.stream_buf.lines() {
-        //     match line {
         let mut reply = String::new();
         let result = self.stream_buf.read_line(&mut reply);
 
@@ -339,50 +337,39 @@ impl Iterator for EventIterator {
     }
 }
 
-impl BspwmConnection {
-    /// Subscribes to the given events
-    pub fn subscribe(
-        &self,
-        subscriptions: &[Subscription],
-        fifo_flag: bool,
-        count: Option<u32>,
-    ) -> Result<EventIterator, ReplyError> {
-        let mut conn = BspwmConnection::connect()?;
+/// Subscribes to the given events
+pub fn subscribe(
+    subscriptions: &[Subscription],
+    fifo_flag: bool,
+    count: Option<u32>,
+) -> Result<EventIterator, ReplyError> {
+    let mut conn = crate::connect()?;
 
-        let all_subscriptions = &subscriptions
-            .iter()
-            .map(|x| x.to_string())
-            .collect::<Vec<_>>()
-            .join("\x00");
+    let all_subscriptions = &subscriptions
+        .iter()
+        .map(|x| x.to_string())
+        .collect::<Vec<_>>()
+        .join("\x00");
 
-        let mut count_option = String::new();
-        let mut fifo_option = "";
+    let mut count_option = String::new();
+    let mut fifo_option = "";
 
-        if let Some(x) = count {
-            count_option = format!("--count\x00{}\x00", x);
-        }
-
-        if fifo_flag {
-            fifo_option = "--fifo\x00";
-        }
-
-        let subscribe_message = format!(
-            "subscribe\x00{}{}{}\x00",
-            fifo_option, count_option, all_subscriptions
-        );
-
-        conn.send_message(&subscribe_message)?;
-
-        Ok(EventIterator {
-            stream_buf: BufReader::new(conn),
-        })
+    if let Some(x) = count {
+        count_option = format!("--count\x00{}\x00", x);
     }
 
-    // /// Listen to the subscriptions
-    // pub fn listen(&mut self) -> EventIterator {
-    //     EventIterator {
-    //         stream: &mut self.stream,
-    //         cache: VecDeque::new(),
-    //     }
-    // }
+    if fifo_flag {
+        fifo_option = "--fifo\x00";
+    }
+
+    let subscribe_message = format!(
+        "subscribe\x00{}{}{}\x00",
+        fifo_option, count_option, all_subscriptions
+    );
+
+    conn.send_message(&subscribe_message)?;
+
+    Ok(EventIterator {
+        stream_buf: BufReader::new(conn),
+    })
 }

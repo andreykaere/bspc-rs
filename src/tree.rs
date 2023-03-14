@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::errors::ReplyError;
 use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
 use crate::query::QueryOptions;
-use crate::{BspwmConnection, Id};
+use crate::Id;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {
@@ -97,40 +97,38 @@ pub enum Tree {
     Monitor(Monitor),
 }
 
-impl BspwmConnection {
-    pub fn from_id_to_node(&self, id: Id) -> Result<Option<Node>, ReplyError> {
-        todo!();
-    }
-    //     let tree_raw = self.query_tree(QueryOptions::Monitor)?;
-    //     let tree = if let Tree::Monitor(mon) = tree_raw {
-    //         mon
-    //     } else {
-    //         unreachable!();
-    //     };
-
-    //     for desktop in tree.desktops {
-    //         let root = desktop.root;
-
-    //         if let Some(root) = root {
-    //             while let None = root.client {
-    //                 if let Some(first_child) = root.first_child {
-    //                     if first_child.id == id {
-    //                         return Ok(Some(*first_child));
-    //                     }
-    //                 }
-
-    //                 if let Some(second_child) = root.second_child {
-    //                     if second_child.id == id {
-    //                         return Ok(Some(*second_child));
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     Ok(None)
-    // }
+pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
+    todo!();
 }
+//     let tree_raw = self.query_tree(QueryOptions::Monitor)?;
+//     let tree = if let Tree::Monitor(mon) = tree_raw {
+//         mon
+//     } else {
+//         unreachable!();
+//     };
+
+//     for desktop in tree.desktops {
+//         let root = desktop.root;
+
+//         if let Some(root) = root {
+//             while let None = root.client {
+//                 if let Some(first_child) = root.first_child {
+//                     if first_child.id == id {
+//                         return Ok(Some(*first_child));
+//                     }
+//                 }
+
+//                 if let Some(second_child) = root.second_child {
+//                     if second_child.id == id {
+//                         return Ok(Some(*second_child));
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     Ok(None)
+// }
 
 #[cfg(test)]
 mod test {
