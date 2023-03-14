@@ -19,10 +19,8 @@ pub trait BspcCommunication {
 
 impl BspcCommunication for UnixStream {
     fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
-        println!("write start");
         self.write_all(message.as_bytes())?;
         self.flush()?;
-        println!("write end");
 
         Ok(())
     }

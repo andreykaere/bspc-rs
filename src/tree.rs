@@ -99,8 +99,6 @@ pub enum Tree {
 
 impl BspwmConnection {
     pub fn from_id_to_node(&self, id: Id) -> Result<Option<Node>, ReplyError> {
-        println!("{id}");
-
         let tree_raw = self.query_tree(QueryOptions::Monitor)?;
         let tree = if let Tree::Monitor(mon) = tree_raw {
             mon
@@ -116,14 +114,12 @@ impl BspwmConnection {
                     if first_child.id == id {
                         return Ok(Some(*first_child));
                     }
-                    println!("{}", first_child.id);
                 }
 
                 if let Some(second_child) = root.second_child {
                     if second_child.id == id {
                         return Ok(Some(*second_child));
                     }
-                    println!("{}", second_child.id);
                 }
             }
         }
