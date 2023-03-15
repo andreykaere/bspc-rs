@@ -79,7 +79,7 @@ mod test {
         ];
 
         let mut subscribers =
-            conn.subscribe(&subscriptions, false, None).unwrap();
+            Bspc::subscribe(&subscriptions, false, None).unwrap();
 
         for event in subscribers {
             match event.unwrap() {

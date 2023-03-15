@@ -27,11 +27,26 @@ impl BspcCommunication for UnixStream {
 
     fn receive_message(&mut self) -> Result<Vec<String>, ReplyError> {
         let buf_reader = BufReader::new(self);
+        let mut lines_iter = buf_reader.lines();
         let mut result = Vec::new();
 
-        // Ok(buf_reader.lines().collect())
+        let first_line = match lines_iter.next() {
+            Some(x) => x?,
+            None => {
+                return Err(ReplyError::NoReply);
+            }
+        };
+        let first_line = first_line.as_bytes();
 
-        for line in buf_reader.lines() {
+        if first_line[0] == 7 {
+            let reply = String::from_utf8(first_line[1..].to_vec())?;
+            return Err(ReplyError::RequestFailed(reply));
+        } else {
+            let first_line = String::from_utf8(first_line.to_vec())?;
+            result.push(first_line);
+        }
+
+        for line in lines_iter {
             result.push(line?);
         }
 

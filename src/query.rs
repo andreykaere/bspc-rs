@@ -58,7 +58,8 @@ impl Bspc {
         let reply = conn.receive_message()?;
 
         if reply.len() > 1 {
-            println!("Something is weird, reply has more than one element");
+            // TODO: Test if this can happen
+            panic!("{}", format!("Something is weird, reply has more than one element, this is debug log: {:#?}", reply));
         }
 
         let reply = &reply[0];
@@ -126,8 +127,7 @@ impl Bspc {
 
     pub fn query_tree(option: QueryOptions) -> Result<Tree, ReplyError> {
         let mut conn = Bspc::connect()?;
-        let message =
-            format!("query\x00--tree\x00--{}\x00", option.to_string());
+        let message = format!("query\x00--tree\x00--{}\x00", option);
         conn.send_message(&message)?;
 
         let reply = conn.receive_message()?;
@@ -140,14 +140,14 @@ impl Bspc {
 
         match option {
             QueryOptions::Monitor => {
-                Ok(Tree::Monitor(serde_json::from_str(&reply)?))
+                Ok(Tree::Monitor(serde_json::from_str(reply)?))
             }
 
             QueryOptions::Desktop => {
-                Ok(Tree::Desktop(serde_json::from_str(&reply)?))
+                Ok(Tree::Desktop(serde_json::from_str(reply)?))
             }
 
-            QueryOptions::Node => Ok(Tree::Node(serde_json::from_str(&reply)?)),
+            QueryOptions::Node => Ok(Tree::Node(serde_json::from_str(reply)?)),
         }
     }
 }
@@ -168,6 +168,15 @@ mod test {
     //             .unwrap()
     //     );
     // }
+
+    #[test]
+    fn test_fullscreen_node() {
+        let node_request = format!(".fullscreen.window");
+        let query_result =
+            Bspc::query_nodes(None, None, None, Some(&node_request));
+
+        query_result.unwrap();
+    }
 
     #[test]
     fn test_query_tree() {

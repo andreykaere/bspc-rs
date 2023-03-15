@@ -34,6 +34,7 @@ pub enum ReplyError {
     QueryError(QueryError),
     InvalidRequest,
     RequestFailed(String),
+    NoReply,
 }
 
 impl Error for ReplyError {}
@@ -46,6 +47,9 @@ impl fmt::Display for ReplyError {
             ReplyError::InvalidRequest => write!(f, "Given request is invalid"),
             ReplyError::QueryError(err) => err.fmt(f),
             ReplyError::RequestFailed(err) => write!(f, "{}", err),
+            ReplyError::NoReply => {
+                write!(f, "No reply was returned to given request")
+            }
         }
     }
 }
