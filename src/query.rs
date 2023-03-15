@@ -57,19 +57,11 @@ impl Bspc {
 
         let reply = conn.receive_message()?;
 
-        if reply.len() > 1 {
-            // TODO: Test if this can happen
-            panic!("{}", format!("Something is weird, reply has more than one element, this is debug log: {:#?}", reply));
-        }
-
-        let reply = &reply[0];
         let mut ids = Vec::new();
 
-        for node_id in reply.split('\n') {
-            if !node_id.is_empty() {
-                let id = from_hex_to_id(node_id)?;
-                ids.push(id);
-            }
+        for reply_id in reply.iter() {
+            let id = from_hex_to_id(reply_id)?;
+            ids.push(id);
         }
 
         Ok(ids)
@@ -133,7 +125,8 @@ impl Bspc {
         let reply = conn.receive_message()?;
 
         if reply.len() > 1 {
-            println!("Something is weird, reply has more than one element");
+            // TODO: Test if this can happen
+            panic!("{}", format!("Something is weird, reply has more than one element, this is debug log: {:#?}", reply));
         }
 
         let reply = &reply[0];
