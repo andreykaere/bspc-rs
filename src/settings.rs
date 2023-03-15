@@ -6,7 +6,7 @@ use strum_macros::EnumString;
 
 use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
-use crate::BspwmConnection;
+use crate::Bspc;
 
 #[derive(Debug, Clone, Copy, EnumString, Display)]
 #[strum(serialize_all = "snake_case")]
@@ -145,7 +145,7 @@ impl<T: BspcCommunication> ConfigProperties for T {
     }
 }
 
-impl BspwmConnection {
+impl Bspc {
     pub fn get_normal_border_color(&mut self) -> Result<String, ReplyError> {
         self.get_config_property("normal_border_color")
     }
@@ -371,7 +371,7 @@ impl BspwmConnection {
     }
 }
 
-impl BspwmConnection {
+impl Bspc {
     pub fn set_normal_border_color(
         &mut self,
         value: String,

@@ -6,7 +6,7 @@ use crate::errors::ReplyError;
 use crate::parser::utils::from_hex_to_id;
 // use crate::selectors::Selector;
 use crate::tree::{Node, Tree};
-use crate::{BspwmConnection, Id};
+use crate::{Bspc, Id};
 
 #[derive(Debug, Display)]
 #[strum(serialize_all = "snake_case")]
@@ -16,9 +16,8 @@ pub enum QueryOptions {
     Node,
 }
 
-impl BspwmConnection {
+impl Bspc {
     fn query(
-        &self,
         query_type: &str,
         names_flag: bool,
         selector: Option<&str>,
@@ -26,7 +25,7 @@ impl BspwmConnection {
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        let mut conn = BspwmConnection::connect()?;
+        let mut conn = Bspc::connect()?;
         let mut request = format!("--{query_type}");
 
         if names_flag {
@@ -57,6 +56,12 @@ impl BspwmConnection {
         conn.send_message(&message)?;
 
         let reply = conn.receive_message()?;
+
+        if reply.len() > 1 {
+            println!("Something is weird, reply has more than one element");
+        }
+
+        let reply = &reply[0];
         let mut ids = Vec::new();
 
         for node_id in reply.split('\n') {
@@ -70,13 +75,12 @@ impl BspwmConnection {
     }
 
     pub fn query_nodes(
-        &self,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        self.query(
+        Self::query(
             "nodes",
             false,
             selector,
@@ -87,14 +91,13 @@ impl BspwmConnection {
     }
 
     pub fn query_desktops(
-        &self,
         names_flag: bool,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        self.query(
+        Self::query(
             "desktops",
             names_flag,
             selector,
@@ -105,14 +108,13 @@ impl BspwmConnection {
     }
 
     pub fn query_monitors(
-        &self,
         names_flag: bool,
         selector: Option<&str>,
         monitor_selector: Option<&str>,
         desktop_selector: Option<&str>,
         node_selector: Option<&str>,
     ) -> Result<Vec<Id>, ReplyError> {
-        self.query(
+        Self::query(
             "monitors",
             names_flag,
             selector,
@@ -122,13 +124,19 @@ impl BspwmConnection {
         )
     }
 
-    pub fn query_tree(&self, option: QueryOptions) -> Result<Tree, ReplyError> {
-        let mut conn = BspwmConnection::connect()?;
+    pub fn query_tree(option: QueryOptions) -> Result<Tree, ReplyError> {
+        let mut conn = Bspc::connect()?;
         let message =
             format!("query\x00--tree\x00--{}\x00", option.to_string());
         conn.send_message(&message)?;
 
         let reply = conn.receive_message()?;
+
+        if reply.len() > 1 {
+            println!("Something is weird, reply has more than one element");
+        }
+
+        let reply = &reply[0];
 
         match option {
             QueryOptions::Monitor => {
@@ -156,15 +164,15 @@ mod test {
     // fn test_query_nodes() {
     //     println!(
     //         "{:#?}",
-    //         BspwmConnection::query_nodes(None, None, None, Some(".!hidden"))
+    //         Bspc::query_nodes(None, None, None, Some(".!hidden"))
     //             .unwrap()
     //     );
     // }
 
-    // #[test]
-    // fn test_query_tree() {
-    //     let tree = BspwmConnection::query_tree(QueryOptions::Monitor).unwrap();
+    #[test]
+    fn test_query_tree() {
+        let tree = Bspc::query_tree(QueryOptions::Monitor).unwrap();
 
-    //     println!("{tree:#?}");
-    // }
+        println!("{tree:#?}");
+    }
 }

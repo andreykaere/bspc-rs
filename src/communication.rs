@@ -3,11 +3,11 @@ use std::io::{BufRead, BufReader};
 use std::os::unix::net::UnixStream;
 
 use crate::errors::ReplyError;
-use crate::BspwmConnection;
+use crate::Bspc;
 
 pub trait BspcCommunication {
     fn send_message(&mut self, message: &str) -> Result<(), ReplyError>;
-    fn receive_message(&mut self) -> Result<String, ReplyError>;
+    fn receive_message(&mut self) -> Result<Vec<String>, ReplyError>;
 
     // fn receive_send_message(&mut self) -> Result<String, ReplyError> {
     //     let reply = self.receive_message()?;
@@ -25,17 +25,28 @@ impl BspcCommunication for UnixStream {
         Ok(())
     }
 
-    fn receive_message(&mut self) -> Result<String, ReplyError> {
-        let mut buf = Vec::new();
-        self.read_to_end(&mut buf)?;
+    fn receive_message(&mut self) -> Result<Vec<String>, ReplyError> {
+        let buf_reader = BufReader::new(self);
+        let mut result = Vec::new();
 
-        if buf[0] == 7 {
-            let reply = String::from_utf8((&buf[1..]).to_vec())?;
-            return Err(ReplyError::RequestFailed(reply));
+        // Ok(buf_reader.lines().collect())
+
+        for line in buf_reader.lines() {
+            result.push(line?);
         }
 
-        let reply = String::from_utf8(buf)?;
-        Ok(reply)
+        Ok(result)
+
+        // let mut buf = Vec::new();
+        // self.read_to_end(&mut buf)?;
+
+        // if buf[0] == 7 {
+        //     let reply = String::from_utf8((&buf[1..]).to_vec())?;
+        //     return Err(ReplyError::RequestFailed(reply));
+        // }
+
+        // let reply = String::from_utf8(buf)?;
+        // Ok(reply)
     }
 
     // fn receive_message(&mut self) -> Result<String, ReplyError> {
@@ -59,7 +70,7 @@ impl BspcCommunication for UnixStream {
     // }
 }
 
-// impl BspcCommunication for BspwmConnection {
+// impl BspcCommunication for Bspc {
 //     fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
 //         self.stream.send_message(message)
 //     }

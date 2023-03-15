@@ -8,7 +8,7 @@ use strum_macros::Display;
 use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
 use crate::properties::*;
-use crate::{BspwmConnection, Id};
+use crate::{Bspc, Id};
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]
@@ -339,15 +339,14 @@ impl Iterator for EventIterator {
     }
 }
 
-impl BspwmConnection {
+impl Bspc {
     /// Subscribes to the given events
     pub fn subscribe(
-        &self,
         subscriptions: &[Subscription],
         fifo_flag: bool,
         count: Option<u32>,
     ) -> Result<EventIterator, ReplyError> {
-        let mut conn = BspwmConnection::connect()?;
+        let mut conn = Bspc::connect()?;
 
         let all_subscriptions = &subscriptions
             .iter()

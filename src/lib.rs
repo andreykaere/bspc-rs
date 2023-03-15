@@ -16,18 +16,18 @@ use events::{Event, EventIterator, Subscription};
 
 pub type Id = u32;
 
-// pub struct BspwmConnection {
+// pub struct Bspc {
 //     stream: UnixStream,
 // }
 
-// pub struct BspwmConnection {
+// pub struct Bspc {
 //     stream: UnixStream,
 //     buffer: Vec<u8>,
 // }
 
-pub struct BspwmConnection;
+pub struct Bspc;
 
-impl BspwmConnection {
+impl Bspc {
     fn locate_socket() -> String {
         if let Ok(path) = env::var("BSPWM_SOCKET") {
             path
@@ -39,7 +39,7 @@ impl BspwmConnection {
         }
     }
 
-    pub fn connect() -> Result<UnixStream, ReplyError> {
+    fn connect() -> Result<UnixStream, ReplyError> {
         let socket_path = Self::locate_socket();
         let stream = UnixStream::connect(socket_path)?;
         // let buffer = BufReader::new(stream);
@@ -48,17 +48,8 @@ impl BspwmConnection {
         Ok(stream)
     }
 
-    // pub fn connect() -> Result<BspwmConnection, ReplyError> {
-    //     let socket_path = Self::locate_socket();
-    //     let stream = UnixStream::connect(socket_path)?;
-    //     let buffer = Vec::new();
-    //     // let buffer = BufReader::new(stream);
-
-    //     Ok(Self { stream, buffer })
-    // }
-
-    pub fn new() -> BspwmConnection {
-        BspwmConnection
+    pub fn new() -> Bspc {
+        Bspc
     }
 }
 
@@ -71,13 +62,13 @@ mod test {
     // fn test_subscribe() {
     //     let subscriptions =
     //         vec![Subscription::All, Subscription::MonitorGeometry];
-    //     BspwmConnection::subscribe(&subscriptions, false, None).unwrap();
+    //     Bspc::subscribe(&subscriptions, false, None).unwrap();
     // }
 
     #[test]
     #[ignore]
     fn test_iterator() {
-        let conn = BspwmConnection::new();
+        let conn = Bspc::new();
 
         let subscriptions = vec![
             Subscription::NodeAdd,
