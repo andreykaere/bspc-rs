@@ -339,7 +339,7 @@ impl Iterator for EventIterator {
     }
 }
 
-/// Subscribes to the given events
+/// Subscribe to the given events
 pub fn subscribe(
     subscriptions: &[Subscription],
     fifo_flag: bool,

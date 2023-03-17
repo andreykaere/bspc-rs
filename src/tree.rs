@@ -97,37 +97,38 @@ pub enum Tree {
     Monitor(Monitor),
 }
 
+// Converts id of the node to `Node` structure
 pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
     todo!();
 
-    //     let tree_raw = self.query_tree(QueryOptions::Monitor)?;
-    //     let tree = if let Tree::Monitor(mon) = tree_raw {
-    //         mon
-    //     } else {
-    //         unreachable!();
-    //     };
+    // let tree_raw = self.query_tree(QueryOptions::Monitor)?;
+    // let tree = if let Tree::Monitor(mon) = tree_raw {
+    //     mon
+    // } else {
+    //     unreachable!();
+    // };
 
-    //     for desktop in tree.desktops {
-    //         let root = desktop.root;
+    // for desktop in tree.desktops {
+    //     let root = desktop.root;
 
-    //         if let Some(root) = root {
-    //             while let None = root.client {
-    //                 if let Some(first_child) = root.first_child {
-    //                     if first_child.id == id {
-    //                         return Ok(Some(*first_child));
-    //                     }
+    //     if let Some(root) = root {
+    //         while let None = root.client {
+    //             if let Some(first_child) = root.first_child {
+    //                 if first_child.id == id {
+    //                     return Ok(Some(*first_child));
     //                 }
+    //             }
 
-    //                 if let Some(second_child) = root.second_child {
-    //                     if second_child.id == id {
-    //                         return Ok(Some(*second_child));
-    //                     }
+    //             if let Some(second_child) = root.second_child {
+    //                 if second_child.id == id {
+    //                     return Ok(Some(*second_child));
     //                 }
     //             }
     //         }
     //     }
+    // }
 
-    //     Ok(None)
+    // Ok(None)
 }
 
 #[cfg(test)]

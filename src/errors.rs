@@ -32,9 +32,10 @@ pub enum ReplyError {
     ConnectionError(io::Error),
     ParseError(ParseError),
     QueryError(QueryError),
-    InvalidRequest,
+    InvalidRequest(String),
     RequestFailed(String),
     NoReply,
+    InvalidSelector(String),
 }
 
 impl Error for ReplyError {}
@@ -44,12 +45,13 @@ impl fmt::Display for ReplyError {
         match self {
             ReplyError::ConnectionError(err) => err.fmt(f),
             ReplyError::ParseError(err) => err.fmt(f),
-            ReplyError::InvalidRequest => write!(f, "Given request is invalid"),
+            ReplyError::InvalidRequest(err) => write!(f, "{}", err),
             ReplyError::QueryError(err) => err.fmt(f),
             ReplyError::RequestFailed(err) => write!(f, "{}", err),
             ReplyError::NoReply => {
                 write!(f, "No reply was returned to given request")
             }
+            ReplyError::InvalidSelector(err) => write!(f, "{}", err),
         }
     }
 }

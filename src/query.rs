@@ -4,7 +4,9 @@ use strum_macros::Display;
 use crate::communication::BspcCommunication;
 use crate::errors::ReplyError;
 use crate::parser::utils::from_hex_to_id;
-// use crate::selectors::Selector;
+use crate::selectors::{
+    DesktopSelector, MonitorSelector, NodeSelector, Selector,
+};
 use crate::tree::{Node, Tree};
 use crate::{bspc, Id};
 
@@ -29,7 +31,9 @@ fn query(
 
     if names_flag {
         if query_type == "nodes" {
-            return Err(ReplyError::InvalidRequest);
+            return Err(ReplyError::InvalidRequest(
+                "You can't apply --names for nodes query request".to_string(),
+            ));
         } else {
             request = format!("{request}\x00--names");
         }
@@ -67,52 +71,69 @@ fn query(
 }
 
 pub fn query_nodes(
-    selector: Option<&str>,
-    monitor_selector: Option<&str>,
-    desktop_selector: Option<&str>,
-    node_selector: Option<&str>,
+    selector: Option<NodeSelector>,
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
 ) -> Result<Vec<Id>, ReplyError> {
     query(
         "nodes",
         false,
-        selector,
-        monitor_selector,
-        desktop_selector,
-        node_selector,
+        extract(&selector)?,
+        extract(&monitor_selector)?,
+        extract(&desktop_selector)?,
+        extract(&node_selector)?,
     )
 }
 
 pub fn query_desktops(
     names_flag: bool,
-    selector: Option<&str>,
-    monitor_selector: Option<&str>,
-    desktop_selector: Option<&str>,
-    node_selector: Option<&str>,
+    selector: Option<DesktopSelector>,
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
 ) -> Result<Vec<Id>, ReplyError> {
     query(
         "desktops",
         names_flag,
-        selector,
-        monitor_selector,
-        desktop_selector,
-        node_selector,
+        extract(&selector)?,
+        extract(&monitor_selector)?,
+        extract(&desktop_selector)?,
+        extract(&node_selector)?,
     )
 }
 
+fn extract<S>(selector: &Option<S>) -> Result<Option<&str>, ReplyError>
+where
+    S: Selector,
+{
+    if let Some(sel) = selector.as_ref() {
+        if !sel.is_valid() {
+            return Err(ReplyError::InvalidRequest(format!(
+                "Monitor selector is invalid: '{}'",
+                sel.extract()
+            )));
+        }
+
+        return Ok(Some(sel.extract()));
+    }
+
+    Ok(None)
+}
 pub fn query_monitors(
     names_flag: bool,
-    selector: Option<&str>,
-    monitor_selector: Option<&str>,
-    desktop_selector: Option<&str>,
-    node_selector: Option<&str>,
+    selector: Option<MonitorSelector>,
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
 ) -> Result<Vec<Id>, ReplyError> {
     query(
         "monitors",
         names_flag,
-        selector,
-        monitor_selector,
-        desktop_selector,
-        node_selector,
+        extract(&selector)?,
+        extract(&monitor_selector)?,
+        extract(&desktop_selector)?,
+        extract(&node_selector)?,
     )
 }
 
