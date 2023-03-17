@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::errors::ReplyError;
 use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
 use crate::query::QueryOptions;
-use crate::{Bspc, Id};
+use crate::Id;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Padding {
@@ -97,10 +97,9 @@ pub enum Tree {
     Monitor(Monitor),
 }
 
-impl Bspc {
-    pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
-        todo!();
-    }
+pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
+    todo!();
+
     //     let tree_raw = self.query_tree(QueryOptions::Monitor)?;
     //     let tree = if let Tree::Monitor(mon) = tree_raw {
     //         mon
@@ -129,7 +128,6 @@ impl Bspc {
     //     }
 
     //     Ok(None)
-    // }
 }
 
 #[cfg(test)]
@@ -157,9 +155,8 @@ mod test {
 
     #[test]
     fn test_from_id_to_node() {
-        let conn = Bspc::new();
         let window_id =
-            Bspc::query_nodes(None, None, None, Some(".fullscreen")).unwrap()
+            query::query_nodes(None, None, None, Some(".fullscreen")).unwrap()
                 [0];
         // let node = conn.from_id_to_node(window_id).unwrap().unwrap();
 

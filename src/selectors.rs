@@ -49,6 +49,8 @@ pub struct NodeModifier {
     ancestor_of: Option<bool>,
 }
 
+// TODO: make a selector and add a check at compile time for validating if
+// the request makes sense (is correct)
 pub struct NodeSelector {
     pub reference: Option<Box<NodeSelector>>,
     pub descriptor: NodeDescriptor,

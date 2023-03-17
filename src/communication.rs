@@ -3,7 +3,6 @@ use std::io::{BufRead, BufReader};
 use std::os::unix::net::UnixStream;
 
 use crate::errors::ReplyError;
-use crate::Bspc;
 
 pub trait BspcCommunication {
     fn send_message(&mut self, message: &str) -> Result<(), ReplyError>;
