@@ -14,12 +14,20 @@ fn locate_socket() -> String {
     }
 }
 
-pub fn connect() -> Result<UnixStream, ReplyError> {
+pub(crate) fn connect() -> Result<UnixStream, ReplyError> {
     let socket_path = locate_socket();
     let stream = UnixStream::connect(socket_path)?;
 
     Ok(stream)
 }
+
+#[doc(inline)]
+pub use crate::events::subscribe;
+
+#[doc(inline)]
+pub use crate::query::{
+    query_desktops, query_monitors, query_nodes, query_tree,
+};
 
 #[cfg(test)]
 mod test {
