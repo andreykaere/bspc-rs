@@ -64,6 +64,7 @@ pub struct MonitorSelector<'a>(pub &'a str);
 pub trait Selector {
     fn is_valid(&self) -> bool;
     fn extract(&self) -> &str;
+    fn kind(&self) -> &str;
 }
 
 impl<'a> Selector for NodeSelector<'a> {
@@ -73,6 +74,10 @@ impl<'a> Selector for NodeSelector<'a> {
 
     fn extract(&self) -> &str {
         self.0
+    }
+
+    fn kind(&self) -> &str {
+        "Node"
     }
 }
 
@@ -84,6 +89,10 @@ impl<'a> Selector for DesktopSelector<'a> {
     fn extract(&self) -> &str {
         self.0
     }
+
+    fn kind(&self) -> &str {
+        "Desktop"
+    }
 }
 
 impl<'a> Selector for MonitorSelector<'a> {
@@ -93,5 +102,9 @@ impl<'a> Selector for MonitorSelector<'a> {
 
     fn extract(&self) -> &str {
         self.0
+    }
+
+    fn kind(&self) -> &str {
+        "Monitor"
     }
 }

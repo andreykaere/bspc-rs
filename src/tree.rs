@@ -97,7 +97,17 @@ pub enum Tree {
     Monitor(Monitor),
 }
 
-// Converts id of the node to `Node` structure
+/// Converts id of the desktop to `Desktop` structure
+pub fn from_id_to_monitor(id: Id) -> Result<Option<Monitor>, ReplyError> {
+    todo!();
+}
+
+/// Converts id of the desktop to `Desktop` structure
+pub fn from_id_to_desktop(id: Id) -> Result<Option<Desktop>, ReplyError> {
+    todo!();
+}
+
+/// Converts id of the node to `Node` structure
 pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
     todo!();
 

@@ -2,7 +2,7 @@ use std::string::ToString;
 use strum_macros::Display;
 
 use crate::communication::BspcCommunication;
-use crate::errors::ReplyError;
+use crate::errors::{QueryError, ReplyError};
 use crate::parser::utils::from_hex_to_id;
 use crate::selectors::{
     DesktopSelector, MonitorSelector, NodeSelector, Selector,
@@ -27,36 +27,35 @@ fn query(
     node_selector: Option<&str>,
 ) -> Result<Vec<Id>, ReplyError> {
     let mut conn = bspc::connect()?;
-    let mut request = format!("--{query_type}");
+    let mut request = format!("query\x00--{query_type}\x00");
 
     if names_flag {
         if query_type == "nodes" {
-            return Err(ReplyError::InvalidRequest(
+            return Err(ReplyError::QueryError(QueryError::InvalidRequest(
                 "You can't apply --names for nodes query request".to_string(),
-            ));
+            )));
         } else {
-            request = format!("{request}\x00--names");
+            request = format!("{request}--names\x00");
         }
     }
 
     if let Some(sel) = selector {
-        request = format!("{request}\x00{sel}");
+        request = format!("{request}{sel}\x00");
     }
 
     if let Some(sel) = monitor_selector {
-        request = format!("{request}\x00--monitor\x00{sel}");
+        request = format!("{request}--monitor\x00{sel}\x00");
     }
 
     if let Some(sel) = desktop_selector {
-        request = format!("{request}\x00--desktop\x00{sel}");
+        request = format!("{request}--desktop\x00{sel}\x00");
     }
 
     if let Some(sel) = node_selector {
-        request = format!("{request}\x00--node\x00{sel}");
+        request = format!("{request}--node\x00{sel}\x00");
     }
 
-    let message = format!("query\x00{}\x00", request);
-    conn.send_message(&message)?;
+    conn.send_message(&request)?;
 
     let reply = conn.receive_message()?;
 
@@ -109,9 +108,10 @@ where
 {
     if let Some(sel) = selector.as_ref() {
         if !sel.is_valid() {
-            return Err(ReplyError::InvalidRequest(format!(
-                "Monitor selector is invalid: '{}'",
-                sel.extract()
+            return Err(ReplyError::InvalidSelector(format!(
+                "This {} selector is invalid: '{}'",
+                sel.kind(),
+                sel.extract(),
             )));
         }
 
@@ -137,10 +137,36 @@ pub fn query_monitors(
     )
 }
 
-pub fn query_tree(option: QueryOptions) -> Result<Tree, ReplyError> {
+/// Returnes tree representation of the matching item
+/// Note: when more then one of the arguments are not `None`, then the
+/// matching will give the result in this priority: Node, Desktop, Monitor.
+/// For example, if Desktop and Node are both not `None`, than this will give the
+/// output for Node.
+pub fn query_tree(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<Tree, ReplyError> {
     let mut conn = bspc::connect()?;
-    let message = format!("query\x00--tree\x00--{}\x00", option);
-    conn.send_message(&message)?;
+    let mut request = "query\x00--tree\x00".to_string();
+
+    let monitor_selector = extract(&monitor_selector)?;
+    let desktop_selector = extract(&desktop_selector)?;
+    let node_selector = extract(&node_selector)?;
+
+    if let Some(sel) = monitor_selector {
+        request = format!("{request}--monitor\x00{sel}\x00");
+    }
+
+    if let Some(sel) = desktop_selector {
+        request = format!("{request}--desktop\x00{sel}\x00");
+    }
+
+    if let Some(sel) = node_selector {
+        request = format!("{request}--node\x00{sel}\x00");
+    }
+
+    conn.send_message(&request)?;
 
     let reply = conn.receive_message()?;
 
@@ -151,17 +177,33 @@ pub fn query_tree(option: QueryOptions) -> Result<Tree, ReplyError> {
 
     let reply = &reply[0];
 
-    match option {
-        QueryOptions::Monitor => {
-            Ok(Tree::Monitor(serde_json::from_str(reply)?))
-        }
-
-        QueryOptions::Desktop => {
-            Ok(Tree::Desktop(serde_json::from_str(reply)?))
-        }
-
-        QueryOptions::Node => Ok(Tree::Node(serde_json::from_str(reply)?)),
+    if node_selector.is_some() {
+        return Ok(Tree::Node(serde_json::from_str(reply)?));
     }
+
+    if desktop_selector.is_some() {
+        return Ok(Tree::Desktop(serde_json::from_str(reply)?));
+    }
+
+    if monitor_selector.is_some() {
+        return Ok(Tree::Monitor(serde_json::from_str(reply)?));
+    }
+
+    Err(ReplyError::QueryError(QueryError::InvalidRequest(
+        "No options were given".to_string(),
+    )))
+
+    // match option {
+    //     QueryOptions::Monitor => {
+    //         Ok(Tree::Monitor(serde_json::from_str(reply)?))
+    //     }
+
+    //     QueryOptions::Desktop => {
+    //         Ok(Tree::Desktop(serde_json::from_str(reply)?))
+    //     }
+
+    //     QueryOptions::Node => Ok(Tree::Node(serde_json::from_str(reply)?)),
+    // }
 }
 
 #[cfg(test)]

@@ -11,6 +11,7 @@ pub use crate::parser::errors::*;
 pub enum QueryError {
     NoMatches,
     InvalidRequest(String),
+    InvalidSelector(String),
 }
 
 impl Error for QueryError {}
@@ -22,6 +23,7 @@ impl fmt::Display for QueryError {
                 write!(f, "Query request hasn't have any matches")
             }
             QueryError::InvalidRequest(err) => write!(f, "{}", err),
+            QueryError::InvalidSelector(err) => write!(f, "{}", err),
         }
     }
 }
