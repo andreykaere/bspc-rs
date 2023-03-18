@@ -8,7 +8,7 @@ use crate::selectors::{
     DesktopSelector, MonitorSelector, NodeSelector, Selector,
 };
 use crate::tree::{Node, Tree};
-use crate::{bspc, Id};
+use crate::{socket, Id};
 
 #[derive(Debug, Display)]
 #[strum(serialize_all = "snake_case")]
@@ -26,7 +26,7 @@ fn query(
     desktop_selector: Option<&str>,
     node_selector: Option<&str>,
 ) -> Result<Vec<Id>, ReplyError> {
-    let mut conn = bspc::connect()?;
+    let mut conn = socket::connect()?;
     let mut request = format!("query\x00--{query_type}\x00");
 
     if names_flag {
@@ -69,6 +69,7 @@ fn query(
     Ok(ids)
 }
 
+/// Returns ids of the nodes, that match certain criteria
 pub fn query_nodes(
     selector: Option<NodeSelector>,
     monitor_selector: Option<MonitorSelector>,
@@ -85,6 +86,7 @@ pub fn query_nodes(
     )
 }
 
+/// Returns ids of the desktops, that match certain criteria
 pub fn query_desktops(
     names_flag: bool,
     selector: Option<DesktopSelector>,
@@ -106,7 +108,7 @@ fn extract<S>(selector: &Option<S>) -> Result<Option<&str>, ReplyError>
 where
     S: Selector,
 {
-    if let Some(sel) = selector.as_ref() {
+    if let Some(sel) = selector {
         if !sel.is_valid() {
             return Err(ReplyError::InvalidSelector(format!(
                 "This {} selector is invalid: '{}'",
@@ -120,6 +122,8 @@ where
 
     Ok(None)
 }
+
+/// Returns ids of monitors, that match certain criteria
 pub fn query_monitors(
     names_flag: bool,
     selector: Option<MonitorSelector>,
@@ -138,6 +142,7 @@ pub fn query_monitors(
 }
 
 /// Returnes tree representation of the matching item
+///
 /// Note: when more then one of the arguments are not `None`, then the
 /// matching will give the result in this priority: Node, Desktop, Monitor.
 /// For example, if Desktop and Node are both not `None`, than this will give the
@@ -147,7 +152,7 @@ pub fn query_tree(
     desktop_selector: Option<DesktopSelector>,
     node_selector: Option<NodeSelector>,
 ) -> Result<Tree, ReplyError> {
-    let mut conn = bspc::connect()?;
+    let mut conn = socket::connect()?;
     let mut request = "query\x00--tree\x00".to_string();
 
     let monitor_selector = extract(&monitor_selector)?;
@@ -227,14 +232,15 @@ mod test {
     fn test_fullscreen_node() {
         let node_request = format!(".fullscreen.window");
         let query_result =
-            bspc::query_nodes(None, None, None, Some(&node_request));
+            query_nodes(None, None, None, Some(NodeSelector(&node_request)));
 
-        query_result.unwrap();
+        println!("{query_result:#?}");
     }
 
     #[test]
     fn test_query_tree() {
-        let tree = bspc::query_tree(QueryOptions::Monitor).unwrap();
+        let tree =
+            query_tree(Some(MonitorSelector("focused")), None, None).unwrap();
 
         println!("{tree:#?}");
     }

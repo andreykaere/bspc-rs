@@ -97,17 +97,20 @@ pub enum Tree {
     Monitor(Monitor),
 }
 
-/// Converts id of the desktop to `Desktop` structure
+/// Converts id of the monitor to `Monitor` structure. Returns `None` if there
+/// is no monitor with the given id.
 pub fn from_id_to_monitor(id: Id) -> Result<Option<Monitor>, ReplyError> {
     todo!();
 }
 
-/// Converts id of the desktop to `Desktop` structure
+/// Converts id of the desktop to `Desktop` structure. Returns `None` if there
+/// is no desktop with the given id.
 pub fn from_id_to_desktop(id: Id) -> Result<Option<Desktop>, ReplyError> {
     todo!();
 }
 
-/// Converts id of the node to `Node` structure
+/// Converts id of the node to `Node` structure. Returns `None` if there
+/// is no node with the given id.
 pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
     todo!();
 
@@ -143,12 +146,14 @@ pub fn from_id_to_node(id: Id) -> Result<Option<Node>, ReplyError> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::events::*;
-    use crate::query::{self, QueryOptions};
     use std::process::Command;
     use std::thread;
     use std::time::Duration;
+
+    use super::*;
+    use crate::events::*;
+    use crate::query::{self, QueryOptions};
+    use crate::selectors::NodeSelector;
 
     #[test]
     fn parse_tree() {
@@ -166,9 +171,13 @@ mod test {
 
     #[test]
     fn test_from_id_to_node() {
-        let window_id =
-            query::query_nodes(None, None, None, Some(".fullscreen")).unwrap()
-                [0];
+        let window_id = query::query_nodes(
+            None,
+            None,
+            None,
+            Some(NodeSelector(".fullscreen")),
+        )
+        .unwrap()[0];
         // let node = conn.from_id_to_node(window_id).unwrap().unwrap();
 
         // println!("{node:#?}");

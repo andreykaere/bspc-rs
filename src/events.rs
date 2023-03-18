@@ -8,7 +8,7 @@ use strum_macros::Display;
 use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
 use crate::properties::*;
-use crate::{bspc, Id};
+use crate::{socket, Id};
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]
@@ -345,9 +345,9 @@ pub fn subscribe(
     fifo_flag: bool,
     count: Option<u32>,
 ) -> Result<EventIterator, ReplyError> {
-    let mut conn = bspc::connect()?;
+    let mut conn = socket::connect()?;
 
-    let all_subscriptions = &subscriptions
+    let all_subscriptions = subscriptions
         .iter()
         .map(|x| x.to_string())
         .collect::<Vec<_>>()
