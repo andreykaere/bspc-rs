@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::errors::ReplyError;
 use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
-use crate::query::QueryOptions;
 use crate::Id;
 
 #[derive(Debug, Serialize, Deserialize)]

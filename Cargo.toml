@@ -2,7 +2,12 @@
 name = "bspc-rs"
 version = "0.1.0"
 edition = "2021"
-
+repository = "https://github.com/andreykaere/bspc-rs"
+description = "Implementation of bspc in Rust"
+keywords = [ "bspwm", "bspc" ]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+authors = [ "andreykaere" ]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

@@ -1,22 +1,13 @@
 use std::string::ToString;
-use strum_macros::Display;
 
-use crate::communication::BspcCommunication;
 use crate::errors::{QueryError, ReplyError};
 use crate::parser::utils::from_hex_to_id;
 use crate::selectors::{
     DesktopSelector, MonitorSelector, NodeSelector, Selector,
 };
-use crate::tree::{Node, Tree};
-use crate::{socket, Id};
-
-#[derive(Debug, Display)]
-#[strum(serialize_all = "snake_case")]
-pub enum QueryOptions {
-    Monitor,
-    Desktop,
-    Node,
-}
+use crate::socket::{self, BspcCommunication};
+use crate::tree::Tree;
+use crate::Id;
 
 fn query(
     query_type: &str,

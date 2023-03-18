@@ -5,10 +5,10 @@ use std::os::unix::net::UnixStream;
 use std::string::ToString;
 use strum_macros::Display;
 
-use crate::communication::BspcCommunication;
-use crate::errors::{ParseError, ReplyError};
+use crate::errors::ReplyError;
 use crate::properties::*;
-use crate::{socket, Id};
+use crate::socket::{self, BspcCommunication};
+use crate::Id;
 
 #[derive(Display, Debug)]
 #[strum(serialize_all = "snake_case")]

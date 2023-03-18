@@ -1,8 +1,6 @@
 use core::fmt;
 use std::error::Error;
 use std::io;
-use std::os::unix::net::UnixStream;
-use strum;
 
 pub use crate::parser::errors::*;
 

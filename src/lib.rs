@@ -6,7 +6,6 @@ pub mod selectors;
 // pub mod settings;
 pub mod tree;
 
-mod communication;
 mod parser;
 mod socket;
 
