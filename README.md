@@ -1,5 +1,6 @@
 # bspc-rs
 
+[![CI](https://github.com/andreykaere/bspc-rs/workflows/CI/badge.svg)](https://github.com/andreykaere/bspc-rs/actions)
 [![crate](https://img.shields.io/crates/v/bspc-rs.svg)](https://crates.io/crates/bspc-rs)
 [![docs](https://docs.rs/bspc-rs/badge.svg)](https://docs.rs/bspc-rs)
 
