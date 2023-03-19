@@ -151,7 +151,7 @@ mod test {
 
     use super::*;
     use crate::events::*;
-    use crate::query::{self, QueryOptions};
+    use crate::query;
     use crate::selectors::NodeSelector;
 
     #[test]

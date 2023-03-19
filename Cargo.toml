@@ -10,6 +10,9 @@ readme = "README.md"
 authors = [ "andreykaere" ]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[dev-dependencies]
+doc-comment = "0.3.3"
+
 [dependencies]
 serde = { version = "1.0.152", features = [ "derive" ] }
 strum_macros = "0.24"
