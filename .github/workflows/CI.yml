@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Build and run container
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
     - name: Build
       run: cargo build --verbose
     - name: Run tests
