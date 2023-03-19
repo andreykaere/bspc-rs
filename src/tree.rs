@@ -175,10 +175,18 @@ mod test {
             None,
             None,
             Some(NodeSelector(".fullscreen")),
-        )
-        .unwrap()[0];
-        // let node = conn.from_id_to_node(window_id).unwrap().unwrap();
+        );
 
-        // println!("{node:#?}");
+        match window_id {
+            Ok(_) => {}
+            Err(ReplyError::RequestFailed(reply)) => {
+                if reply.len() > 0 {
+                    panic!("{}", reply);
+                }
+            }
+            Err(e) => {
+                panic!("{}", e);
+            }
+        }
     }
 }
