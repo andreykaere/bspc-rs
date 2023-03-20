@@ -315,18 +315,36 @@ pub enum Event {
 }
 
 #[derive(Debug)]
-pub struct EventIterator {
+pub struct Subscriber {
     stream_buf: BufReader<UnixStream>,
 }
 
-impl Iterator for EventIterator {
+impl Subscriber {
+    pub fn iter(&mut self) -> EventIterator {
+        EventIterator { subscriber: self }
+    }
+}
+
+impl<'a> IntoIterator for &'a mut Subscriber {
+    type Item = Result<Event, ReplyError>;
+    type IntoIter = EventIterator<'a>;
+
+    fn into_iter(self) -> EventIterator<'a> {
+        self.iter()
+    }
+}
+
+#[derive(Debug)]
+pub struct EventIterator<'a> {
+    subscriber: &'a mut Subscriber,
+}
+
+impl<'a> Iterator for EventIterator<'a> {
     type Item = Result<Event, ReplyError>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        // for line in self.stream_buf.lines() {
-        //     match line {
         let mut reply = String::new();
-        let result = self.stream_buf.read_line(&mut reply);
+        let result = self.subscriber.stream_buf.read_line(&mut reply);
 
         match result {
             Ok(_) => {
@@ -344,7 +362,7 @@ pub fn subscribe(
     subscriptions: &[Subscription],
     fifo_flag: bool,
     count: Option<u32>,
-) -> Result<EventIterator, ReplyError> {
+) -> Result<Subscriber, ReplyError> {
     let mut conn = socket::connect()?;
 
     let all_subscriptions = subscriptions
@@ -371,7 +389,7 @@ pub fn subscribe(
 
     conn.send_message(&subscribe_message)?;
 
-    Ok(EventIterator {
+    Ok(Subscriber {
         stream_buf: BufReader::new(conn),
     })
 }

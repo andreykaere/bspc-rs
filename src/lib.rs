@@ -20,9 +20,9 @@ fn main() {
         Subscription::NodeRemove,
     ];
 
-    let subscribers = bspc::subscribe(&subscriptions, false, None).unwrap();
+    let mut subscriber = bspc::subscribe(&subscriptions, false, None).unwrap();
 
-    for event in subscribers {
+    for event in subscriber.iter() {
         match event.unwrap() {
             Event::NodeEvent(event) => match event {
                 NodeEvent::NodeFocus(node_info) => {
@@ -97,9 +97,24 @@ mod test {
             Subscription::NodeRemove,
         ];
 
-        let subscribers = subscribe(&subscriptions, false, None).unwrap();
+        let mut subscribers = subscribe(&subscriptions, false, None).unwrap();
 
-        for event in subscribers {
+        for event in subscribers.iter() {
+            match event.unwrap() {
+                Event::NodeEvent(event) => match event {
+                    NodeEvent::NodeFocus(_) => {
+                        println!("focus!");
+                    }
+                    NodeEvent::NodeFlag(_) => {
+                        println!("flag!");
+                    }
+                    _ => {}
+                },
+                _ => {}
+            }
+        }
+
+        for event in subscribers.iter() {
             match event.unwrap() {
                 Event::NodeEvent(event) => match event {
                     NodeEvent::NodeFocus(_) => {
