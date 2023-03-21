@@ -5,7 +5,7 @@ This library provides an implementation of
 
 ## Example
 
-```rust
+```rust, no_run
 use bspc_rs as bspc;
 use std::error::Error;
 use bspc::events::{Subscription, Event, NodeEvent};

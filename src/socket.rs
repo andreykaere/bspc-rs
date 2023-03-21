@@ -9,10 +9,23 @@ fn locate_socket() -> String {
     if let Ok(path) = env::var("BSPWM_SOCKET") {
         path
     } else {
-        // Examination of the source code has shown that despite man page
-        // saying that socket path depends on DISPLAY or other parameters, in
-        // fact it always initializing it as presented below
-        "/tmp/bspwm_0_0-socket".to_string()
+        if let Ok(display) = env::var("DISPLAY") {
+            let mut parsed = display.split(':');
+            let host = if let Some(x) = parsed.next() { x } else { "" };
+
+            let mut parsed = parsed
+                .next()
+                .expect("Error occured while parsing DISPLAY variable")
+                .split('.');
+
+            let display_num = if let Some(x) = parsed.next() { x } else { "" };
+
+            let screen_num = if let Some(x) = parsed.next() { x } else { "0" };
+
+            format!("/tmp/bspwm{host}_{display_num}_{screen_num}-socket")
+        } else {
+            panic!("$DISPLAY variable is not set, can't proceed ...");
+        }
     }
 }
 

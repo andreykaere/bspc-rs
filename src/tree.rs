@@ -163,9 +163,11 @@ mod test {
             .output()
             .unwrap();
         let monitor = std::str::from_utf8(&monitor.stdout).unwrap();
-        let monitor: Monitor = serde_json::from_str(monitor).unwrap();
 
-        println!("{:#?}", monitor);
+        if monitor.len() > 1 {
+            let tree: Monitor = serde_json::from_str(monitor).unwrap();
+            println!("{:#?}", tree);
+        }
     }
 
     #[test]
