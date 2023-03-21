@@ -37,8 +37,6 @@ jobs:
           # https://stackoverflow.com/questions/63125480/running-a-gui-application-on-a-ci-service-without-x11
           sudo xvfb-run -a --server-num=99 --auth-file=$HOME/.Xauthority bspwm &
           sleep 5
-          sudo chmod 777 /tmp/*
-          sleep 5
           sudo chmod 777 $HOME/.Xauthority
 
     - name: Open window
@@ -61,13 +59,14 @@ jobs:
 
     - name: Run tests
       run: |
+          sleep 3
+          sudo chmod 777 /tmp/bspwm*
+          sleep 1
           export DISPLAY=:99
           cargo test --no-fail-fast --verbose -- --test-threads=1
 
     - name: Run clippy
-      run: |
-          # rustup component add clippy
-          cargo clippy
+      run: cargo clippy
 
     - name: Run formatter
       run: cargo fmt --check
