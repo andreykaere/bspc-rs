@@ -1,12 +1,9 @@
-use std::os::unix::net::UnixStream;
-use std::str::FromStr;
 use std::string::ToString;
 use strum_macros::Display;
 use strum_macros::EnumString;
 
-use crate::communication::BspcCommunication;
 use crate::errors::{ParseError, ReplyError};
-use crate::Bspc;
+use crate::socket::{self, BspcCommunication};
 
 #[derive(Debug, Clone, Copy, EnumString, Display)]
 #[strum(serialize_all = "snake_case")]
@@ -126,7 +123,14 @@ impl<T: BspcCommunication> ConfigProperties for T {
         self.send_message(&format!("config\x00{}\x00", property))?;
         let reply = self.receive_message()?;
 
-        Ok(reply)
+        if reply.len() > 1 {
+            // TODO: Test if this can happen
+            panic!("{}", format!("Something is weird, reply has more than one element, this is debug log: {:#?}", reply));
+        }
+
+        let reply = &reply[0];
+
+        Ok(reply.to_string())
     }
 
     fn set_config_property(
@@ -145,502 +149,524 @@ impl<T: BspcCommunication> ConfigProperties for T {
     }
 }
 
-impl Bspc {
-    pub fn get_normal_border_color(&mut self) -> Result<String, ReplyError> {
-        self.get_config_property("normal_border_color")
-    }
+pub fn get_normal_border_color() -> Result<String, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn get_active_border_color(&mut self) -> Result<String, ReplyError> {
-        self.get_config_property("active_border_color")
-    }
-
-    pub fn get_focused_border_color(&mut self) -> Result<String, ReplyError> {
-        self.get_config_property("focused_border_color")
-    }
-
-    pub fn get_presel_feedback_color(&mut self) -> Result<String, ReplyError> {
-        self.get_config_property("presel_feedback_color")
-    }
-
-    pub fn get_split_ratio(&mut self) -> Result<f32, ReplyError> {
-        self.get_config_property("split_ratio")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_status_prefix(&mut self) -> Result<String, ReplyError> {
-        self.get_config_property("status_prefix")
-    }
-
-    pub fn get_external_rules_command(&mut self) -> Result<String, ReplyError> {
-        self.get_config_property("external_rules_command")
-    }
-
-    pub fn get_automatic_scheme(&mut self) -> Result<Scheme, ReplyError> {
-        self.get_config_property("automatic_scheme")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_initial_polarity(&mut self) -> Result<Polarity, ReplyError> {
-        self.get_config_property("initial_polarity")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_directional_focus_tightness(
-        &mut self,
-    ) -> Result<Tightness, ReplyError> {
-        self.get_config_property("directional_focus_tightness")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_removal_adjustment(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("removal_adjustment")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_presel_feedback(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("presel_feedback")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_borderless_monocle(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("borderless_monocle")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_gapless_monocle(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("gapless_monocle")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_top_monocle_padding(&mut self) -> Result<i16, ReplyError> {
-        self.get_config_property("top_monocle_padding")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_right_monocle_padding(&mut self) -> Result<i16, ReplyError> {
-        self.get_config_property("right_monocle_padding")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_bottom_monocle_padding(&mut self) -> Result<i16, ReplyError> {
-        self.get_config_property("bottom_monocle_padding")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_left_monocle_padding(&mut self) -> Result<i16, ReplyError> {
-        self.get_config_property("left_monocle_padding")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_single_monocle(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("single_monocle")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_motion_interval(&mut self) -> Result<u16, ReplyError> {
-        self.get_config_property("pointer_motion_interval")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_modifier(
-        &mut self,
-    ) -> Result<PointerModifier, ReplyError> {
-        self.get_config_property("pointer_modifier")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_action1(&mut self) -> Result<PointerAction, ReplyError> {
-        self.get_config_property("pointer_action1")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_action2(&mut self) -> Result<PointerAction, ReplyError> {
-        self.get_config_property("pointer_action2")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_action3(&mut self) -> Result<PointerAction, ReplyError> {
-        self.get_config_property("pointer_action3")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_click_to_focus(&mut self) -> Result<ClickToFocus, ReplyError> {
-        self.get_config_property("click_to_focus")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_swallow_first_click(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("swallow_first_click")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_focus_follows_pointer(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("focus_follows_pointer")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_follows_focus(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("pointer_follows_focus")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_pointer_follows_monitor(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("pointer_follows_monitor")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_mapping_events_count(&mut self) -> Result<i32, ReplyError> {
-        self.get_config_property("mapping_events_count")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_ignore_ewmh_focus(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("ignore_ewmh_focus")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_ignore_ewmh_fullscreen(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("ignore_ewmh_fullscreen")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_ignore_ewmh_struts(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("ignore_ewmh_struts")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_center_pseudo_tiled(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("center_pseudo_tiled")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_honor_size_hints(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("honor_size_hints")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_remove_disabled_monitors(&mut self) -> Result<bool, ReplyError> {
-        self.get_config_property("remove_disabled_monitors")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_remove_unplugged_monitors(
-        &mut self,
-    ) -> Result<bool, ReplyError> {
-        self.get_config_property("remove_unplugged_monitors")?
-            .parse()
-            .map_err(From::from)
-    }
-
-    pub fn get_merge_overlapping_monitors(
-        &mut self,
-    ) -> Result<bool, ReplyError> {
-        self.get_config_property("merge_overlapping_monitors")?
-            .parse()
-            .map_err(From::from)
-    }
+    conn.get_config_property("normal_border_color")
 }
 
-impl Bspc {
-    pub fn set_normal_border_color(
-        &mut self,
-        value: String,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("normal_border_color", &value.to_string())
-    }
+pub fn get_active_border_color() -> Result<String, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_active_border_color(
-        &mut self,
-        value: String,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("active_border_color", &value.to_string())
-    }
+    conn.get_config_property("active_border_color")
+}
 
-    pub fn set_focused_border_color(
-        &mut self,
-        value: String,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("focused_border_color", &value.to_string())
-    }
+pub fn get_focused_border_color() -> Result<String, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_presel_feedback_color(
-        &mut self,
-        value: String,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("presel_feedback_color", &value.to_string())
-    }
+    conn.get_config_property("focused_border_color")
+}
 
-    pub fn set_split_ratio(&mut self, value: f32) -> Result<(), ReplyError> {
-        self.set_config_property("split_ratio", &value.to_string())
-    }
+pub fn get_presel_feedback_color() -> Result<String, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_status_prefix(
-        &mut self,
-        value: String,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("status_prefix", &value.to_string())
-    }
+    conn.get_config_property("presel_feedback_color")
+}
 
-    pub fn set_external_rules_command(
-        &mut self,
-        value: String,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("external_rules_command", &value.to_string())
-    }
+pub fn get_split_ratio() -> Result<f32, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_automatic_scheme(
-        &mut self,
-        value: Scheme,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("automatic_scheme", &value.to_string())
-    }
+    conn.get_config_property("split_ratio")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_initial_polarity(
-        &mut self,
-        value: Polarity,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("initial_polarity", &value.to_string())
-    }
+pub fn get_status_prefix() -> Result<String, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_directional_focus_tightness(
-        &mut self,
-        value: Tightness,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property(
-            "directional_focus_tightness",
-            &value.to_string(),
-        )
-    }
+    conn.get_config_property("status_prefix")
+}
 
-    pub fn set_removal_adjustment(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("removal_adjustment", &value.to_string())
-    }
+pub fn get_external_rules_command() -> Result<String, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_presel_feedback(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("presel_feedback", &value.to_string())
-    }
+    conn.get_config_property("external_rules_command")
+}
 
-    pub fn set_borderless_monocle(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("borderless_monocle", &value.to_string())
-    }
+pub fn get_automatic_scheme() -> Result<Scheme, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_gapless_monocle(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("gapless_monocle", &value.to_string())
-    }
+    conn.get_config_property("automatic_scheme")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_top_monocle_padding(
-        &mut self,
-        value: i16,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("top_monocle_padding", &value.to_string())
-    }
+pub fn get_initial_polarity() -> Result<Polarity, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_right_monocle_padding(
-        &mut self,
-        value: i16,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("right_monocle_padding", &value.to_string())
-    }
+    conn.get_config_property("initial_polarity")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_bottom_monocle_padding(
-        &mut self,
-        value: i16,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("bottom_monocle_padding", &value.to_string())
-    }
+pub fn get_directional_focus_tightness() -> Result<Tightness, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_left_monocle_padding(
-        &mut self,
-        value: i16,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("left_monocle_padding", &value.to_string())
-    }
+    conn.get_config_property("directional_focus_tightness")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_single_monocle(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("single_monocle", &value.to_string())
-    }
+pub fn get_removal_adjustment() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_pointer_motion_interval(
-        &mut self,
-        value: u16,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_motion_interval", &value.to_string())
-    }
+    conn.get_config_property("removal_adjustment")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_pointer_modifier(
-        &mut self,
-        value: PointerModifier,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_modifier", &value.to_string())
-    }
+pub fn get_presel_feedback() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_pointer_action1(
-        &mut self,
-        value: PointerAction,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_action1", &value.to_string())
-    }
+    conn.get_config_property("presel_feedback")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_pointer_action2(
-        &mut self,
-        value: PointerAction,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_action2", &value.to_string())
-    }
+pub fn get_borderless_monocle() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_pointer_action3(
-        &mut self,
-        value: PointerAction,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_action3", &value.to_string())
-    }
+    conn.get_config_property("borderless_monocle")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_click_to_focus(
-        &mut self,
-        value: ClickToFocus,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("click_to_focus", &value.to_string())
-    }
+pub fn get_gapless_monocle() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_swallow_first_click(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("swallow_first_click", &value.to_string())
-    }
+    conn.get_config_property("gapless_monocle")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_focus_follows_pointer(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("focus_follows_pointer", &value.to_string())
-    }
+pub fn get_top_monocle_padding() -> Result<i16, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_pointer_follows_focus(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_follows_focus", &value.to_string())
-    }
+    conn.get_config_property("top_monocle_padding")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_pointer_follows_monitor(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("pointer_follows_monitor", &value.to_string())
-    }
+pub fn get_right_monocle_padding() -> Result<i16, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_mapping_events_count(
-        &mut self,
-        value: i32,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("mapping_events_count", &value.to_string())
-    }
+    conn.get_config_property("right_monocle_padding")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_ignore_ewmh_focus(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("ignore_ewmh_focus", &value.to_string())
-    }
+pub fn get_bottom_monocle_padding() -> Result<i16, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_ignore_ewmh_fullscreen(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("ignore_ewmh_fullscreen", &value.to_string())
-    }
+    conn.get_config_property("bottom_monocle_padding")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_ignore_ewmh_struts(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("ignore_ewmh_struts", &value.to_string())
-    }
+pub fn get_left_monocle_padding() -> Result<i16, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_center_pseudo_tiled(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("center_pseudo_tiled", &value.to_string())
-    }
+    conn.get_config_property("left_monocle_padding")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_honor_size_hints(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("honor_size_hints", &value.to_string())
-    }
+pub fn get_single_monocle() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_remove_disabled_monitors(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property("remove_disabled_monitors", &value.to_string())
-    }
+    conn.get_config_property("single_monocle")?
+        .parse()
+        .map_err(From::from)
+}
 
-    pub fn set_remove_unplugged_monitors(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property(
-            "remove_unplugged_monitors",
-            &value.to_string(),
-        )
-    }
+pub fn get_pointer_motion_interval() -> Result<u16, ReplyError> {
+    let mut conn = socket::connect()?;
 
-    pub fn set_merge_overlapping_monitors(
-        &mut self,
-        value: bool,
-    ) -> Result<(), ReplyError> {
-        self.set_config_property(
-            "merge_overlapping_monitors",
-            &value.to_string(),
-        )
-    }
+    conn.get_config_property("pointer_motion_interval")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_pointer_modifier() -> Result<PointerModifier, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("pointer_modifier")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_pointer_action1() -> Result<PointerAction, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("pointer_action1")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_pointer_action2() -> Result<PointerAction, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("pointer_action2")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_pointer_action3() -> Result<PointerAction, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("pointer_action3")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_click_to_focus() -> Result<ClickToFocus, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("click_to_focus")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_swallow_first_click() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("swallow_first_click")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_focus_follows_pointer() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("focus_follows_pointer")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_pointer_follows_focus() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("pointer_follows_focus")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_pointer_follows_monitor() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("pointer_follows_monitor")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_mapping_events_count() -> Result<i32, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("mapping_events_count")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_ignore_ewmh_focus() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("ignore_ewmh_focus")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_ignore_ewmh_fullscreen() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("ignore_ewmh_fullscreen")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_ignore_ewmh_struts() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("ignore_ewmh_struts")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_center_pseudo_tiled() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("center_pseudo_tiled")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_honor_size_hints() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("honor_size_hints")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_remove_disabled_monitors() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("remove_disabled_monitors")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_remove_unplugged_monitors() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("remove_unplugged_monitors")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn get_merge_overlapping_monitors() -> Result<bool, ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.get_config_property("merge_overlapping_monitors")?
+        .parse()
+        .map_err(From::from)
+}
+
+pub fn set_normal_border_color(value: String) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("normal_border_color", &value)
+}
+
+pub fn set_active_border_color(value: String) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("active_border_color", &value)
+}
+
+pub fn set_focused_border_color(value: String) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("focused_border_color", &value)
+}
+
+pub fn set_presel_feedback_color(value: String) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("presel_feedback_color", &value)
+}
+
+pub fn set_split_ratio(value: f32) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("split_ratio", &value.to_string())
+}
+
+pub fn set_status_prefix(value: String) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("status_prefix", &value)
+}
+
+pub fn set_external_rules_command(value: String) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("external_rules_command", &value)
+}
+
+pub fn set_automatic_scheme(value: Scheme) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("automatic_scheme", &value.to_string())
+}
+
+pub fn set_initial_polarity(value: Polarity) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("initial_polarity", &value.to_string())
+}
+
+pub fn set_directional_focus_tightness(
+    value: Tightness,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("directional_focus_tightness", &value.to_string())
+}
+
+pub fn set_removal_adjustment(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("removal_adjustment", &value.to_string())
+}
+
+pub fn set_presel_feedback(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("presel_feedback", &value.to_string())
+}
+
+pub fn set_borderless_monocle(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("borderless_monocle", &value.to_string())
+}
+
+pub fn set_gapless_monocle(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("gapless_monocle", &value.to_string())
+}
+
+pub fn set_top_monocle_padding(value: i16) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("top_monocle_padding", &value.to_string())
+}
+
+pub fn set_right_monocle_padding(value: i16) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("right_monocle_padding", &value.to_string())
+}
+
+pub fn set_bottom_monocle_padding(value: i16) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("bottom_monocle_padding", &value.to_string())
+}
+
+pub fn set_left_monocle_padding(value: i16) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("left_monocle_padding", &value.to_string())
+}
+
+pub fn set_single_monocle(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("single_monocle", &value.to_string())
+}
+
+pub fn set_pointer_motion_interval(value: u16) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_motion_interval", &value.to_string())
+}
+
+pub fn set_pointer_modifier(value: PointerModifier) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_modifier", &value.to_string())
+}
+
+pub fn set_pointer_action1(value: PointerAction) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_action1", &value.to_string())
+}
+
+pub fn set_pointer_action2(value: PointerAction) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_action2", &value.to_string())
+}
+
+pub fn set_pointer_action3(value: PointerAction) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_action3", &value.to_string())
+}
+
+pub fn set_click_to_focus(value: ClickToFocus) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("click_to_focus", &value.to_string())
+}
+
+pub fn set_swallow_first_click(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("swallow_first_click", &value.to_string())
+}
+
+pub fn set_focus_follows_pointer(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("focus_follows_pointer", &value.to_string())
+}
+
+pub fn set_pointer_follows_focus(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_follows_focus", &value.to_string())
+}
+
+pub fn set_pointer_follows_monitor(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("pointer_follows_monitor", &value.to_string())
+}
+
+pub fn set_mapping_events_count(value: i32) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("mapping_events_count", &value.to_string())
+}
+
+pub fn set_ignore_ewmh_focus(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("ignore_ewmh_focus", &value.to_string())
+}
+
+pub fn set_ignore_ewmh_fullscreen(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("ignore_ewmh_fullscreen", &value.to_string())
+}
+
+pub fn set_ignore_ewmh_struts(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("ignore_ewmh_struts", &value.to_string())
+}
+
+pub fn set_center_pseudo_tiled(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("center_pseudo_tiled", &value.to_string())
+}
+
+pub fn set_honor_size_hints(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("honor_size_hints", &value.to_string())
+}
+
+pub fn set_remove_disabled_monitors(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("remove_disabled_monitors", &value.to_string())
+}
+
+pub fn set_remove_unplugged_monitors(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("remove_unplugged_monitors", &value.to_string())
+}
+
+pub fn set_merge_overlapping_monitors(value: bool) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    conn.set_config_property("merge_overlapping_monitors", &value.to_string())
 }

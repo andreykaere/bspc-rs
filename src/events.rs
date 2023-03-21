@@ -357,7 +357,13 @@ impl<'a> Iterator for EventIterator<'a> {
     }
 }
 
-/// Subscribe to the given events
+/// Subscribes to the given events.
+///
+/// If `fifo_flag` is set to `true`, then returns a path to a FIFO from which
+/// events can be read and return.
+///
+/// If `count` is `Some(x)`, then it stops returning subscription events
+/// after having received `x` events.
 pub fn subscribe(
     subscriptions: &[Subscription],
     fifo_flag: bool,

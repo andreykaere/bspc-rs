@@ -6,6 +6,7 @@ This library provides an implementation of
 ## Example
 
 ```rust, no_run
+# #[allow(clippy::needless_doctest_main)]
 use bspc_rs as bspc;
 use std::error::Error;
 use bspc::events::{Subscription, Event, NodeEvent};
@@ -53,7 +54,7 @@ pub mod events;
 pub mod properties;
 pub mod query;
 pub mod selectors;
-// pub mod settings;
+pub mod settings;
 pub mod tree;
 
 mod parser;
