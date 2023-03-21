@@ -27,7 +27,7 @@ fn main() {
 
     let mut subscriber = bspc::subscribe(&subscriptions, false, None).unwrap();
 
-    for event in subscriber.iter() {
+    for event in subscriber.events() {
         match event.unwrap() {
             Event::NodeEvent(event) => match event {
                 NodeEvent::NodeFocus(node_info) => {

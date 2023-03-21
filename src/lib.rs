@@ -22,7 +22,7 @@ fn main() {
 
     let mut subscriber = bspc::subscribe(&subscriptions, false, None).unwrap();
 
-    for event in subscriber.iter() {
+    for event in subscriber.events() {
         match event.unwrap() {
             Event::NodeEvent(event) => match event {
                 NodeEvent::NodeFocus(node_info) => {
@@ -99,7 +99,7 @@ mod test {
 
         let mut subscribers = subscribe(&subscriptions, false, None).unwrap();
 
-        for event in subscribers.iter() {
+        for event in subscribers.events() {
             match event.unwrap() {
                 Event::NodeEvent(event) => match event {
                     NodeEvent::NodeFocus(_) => {
@@ -108,13 +108,14 @@ mod test {
                     NodeEvent::NodeFlag(_) => {
                         println!("flag!");
                     }
+                    NodeEvent::NodeRemove(_) => break,
                     _ => {}
                 },
                 _ => {}
             }
         }
 
-        for event in subscribers.iter() {
+        for event in subscribers.events() {
             match event.unwrap() {
                 Event::NodeEvent(event) => match event {
                     NodeEvent::NodeFocus(_) => {

@@ -320,7 +320,7 @@ pub struct Subscriber {
 }
 
 impl Subscriber {
-    pub fn iter(&mut self) -> EventIterator {
+    pub fn events(&mut self) -> EventIterator {
         EventIterator { subscriber: self }
     }
 }
@@ -330,7 +330,7 @@ impl<'a> IntoIterator for &'a mut Subscriber {
     type IntoIter = EventIterator<'a>;
 
     fn into_iter(self) -> EventIterator<'a> {
-        self.iter()
+        self.events()
     }
 }
 
