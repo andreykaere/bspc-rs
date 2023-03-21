@@ -8,8 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  build_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,45 +40,21 @@ jobs:
           sudo chmod 777 /tmp/*
           sleep 5
           sudo chmod 777 $HOME/.Xauthority
-          # sleep 5
-          # xhost si:localuser:root
-          # export DISPLAY=:99
-          # export XAUTHORITY=$HOME/.Xauthority
-          # https://stackoverflow.com/questions/73490184/sudo-nautilus-gives-authorization-required-but-no-authorization-protocol-specif
-          # xhost + 
-        
-          # export DISPLAY=:0
-          # sudo Xvfb -ac :0 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-          # sudo xvfb-run $HOME/.config/bspwm/bspwmrc &
-          # $HOME/.config/bspwm/bspwmrc &
-
-    # - name: Build and run container
-    #   run: docker build . --file .github/workflows/Dockerfile --tag my-image-name:$(date +%s)
-    #
-    
-    # - name: Generating Xauthority
-    #   run: |
-    #       touch $HOME/.Xauthority
-    #       xauth generate :99 . trusted 
-    #       xauth add ${HOST}:99 . $(xxd -l 16 -p /dev/urandom)
-    #       xauth list 
 
     - name: Open window
       run: |
           export DISPLAY=:99
           zathura &
-          # xauth list
-          # ls -l /root
-          # export DISPLAY=:99
-          # xauth list
-          # sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
 
     - name: Test bspc
       run: ls -l /tmp/
+    
+    - name: Update rustup
+      run: rustup update stable && rustup default stable
 
     - name: Build
       run: cargo build --verbose
-
+  
     - name: Build tests
       run: |
           cargo test --no-run --verbose
@@ -88,3 +63,11 @@ jobs:
       run: |
           export DISPLAY=:99
           cargo test --no-fail-fast --verbose -- --test-threads=1
+
+    - name: Run clippy
+      run: |
+          # rustup component add clippy
+          cargo clippy
+
+    - name: Run formatter
+      run: cargo fmt --check
