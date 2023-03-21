@@ -8,8 +8,7 @@ This library provides an implementation of
 ```rust, no_run
 # #[allow(clippy::needless_doctest_main)]
 use bspc_rs as bspc;
-use std::error::Error;
-use bspc::events::{Subscription, Event, NodeEvent};
+use bspc::events::{self, Subscription, Event, NodeEvent};
 
 
 fn main() {
@@ -21,7 +20,7 @@ fn main() {
         Subscription::NodeRemove,
     ];
 
-    let mut subscriber = bspc::subscribe(&subscriptions, false, None).unwrap();
+    let mut subscriber = events::subscribe(&subscriptions, false, None).unwrap();
 
     for event in subscriber.events() {
         match event.unwrap() {
@@ -62,18 +61,18 @@ mod socket;
 
 pub type Id = u32;
 
-#[doc(inline)]
-pub use crate::events::subscribe;
+// #[doc(inline)]
+// pub use crate::events::subscribe;
 
-#[doc(inline)]
-pub use crate::query::{
-    query_desktops, query_monitors, query_nodes, query_tree,
-};
+// #[doc(inline)]
+// pub use crate::query::{
+//     query_desktops, query_monitors, query_nodes, query_tree,
+// };
 
-#[doc(inline)]
-pub use crate::tree::{
-    from_id_to_desktop, from_id_to_monitor, from_id_to_node,
-};
+// #[doc(inline)]
+// pub use crate::tree::{
+//     from_id_to_desktop, from_id_to_monitor, from_id_to_node,
+// };
 
 #[cfg(test)]
 mod test {

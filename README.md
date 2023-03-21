@@ -12,8 +12,7 @@ Feel free to open any issue or ask any questions.
 
 ```rust, no_run
 use bspc_rs as bspc;
-use std::error::Error;
-use bspc::events::{Subscription, Event, NodeEvent};
+use bspc::events::{self, Subscription, Event, NodeEvent};
 
 
 fn main() {
@@ -25,7 +24,7 @@ fn main() {
         Subscription::NodeRemove,
     ];
 
-    let mut subscriber = bspc::subscribe(&subscriptions, false, None).unwrap();
+    let mut subscriber = events::subscribe(&subscriptions, false, None).unwrap();
 
     for event in subscriber.events() {
         match event.unwrap() {
