@@ -131,3 +131,11 @@ impl<'a> Selector for MonitorSelector<'a> {
         "Monitor"
     }
 }
+
+fn collect(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> String {
+    todo!();
+}
