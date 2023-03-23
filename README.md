@@ -13,9 +13,7 @@ Feel free to open any issue or ask any questions.
 ## Example
 
 ```rust, no_run
-use bspc_rs as bspc;
-use bspc::events::{self, Subscription, Event, NodeEvent};
-
+use bspc_rs::events::{self, Subscription, Event, NodeEvent};
 
 fn main() {
     let subscriptions = vec![

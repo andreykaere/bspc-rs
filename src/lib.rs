@@ -7,9 +7,7 @@ This library provides an implementation of
 
 ```rust, no_run
 # #[allow(clippy::needless_doctest_main)]
-use bspc_rs as bspc;
-use bspc::events::{self, Subscription, Event, NodeEvent};
-
+use bspc_rs::events::{self, Subscription, Event, NodeEvent};
 
 fn main() {
     let subscriptions = vec![
