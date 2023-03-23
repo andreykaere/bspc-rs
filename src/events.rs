@@ -365,9 +365,9 @@ impl<'a> Iterator for EventIterator<'a> {
 /// If `count` is `Some(x)`, then it stops returning subscription events
 /// after having received `x` events.
 pub fn subscribe(
-    subscriptions: &[Subscription],
     fifo_flag: bool,
     count: Option<u32>,
+    subscriptions: &[Subscription],
 ) -> Result<Subscriber, ReplyError> {
     let mut conn = socket::connect()?;
 

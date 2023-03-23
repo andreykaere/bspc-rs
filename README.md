@@ -26,7 +26,7 @@ fn main() {
         Subscription::NodeRemove,
     ];
 
-    let mut subscriber = events::subscribe(&subscriptions, false, None).unwrap();
+    let mut subscriber = events::subscribe(false, None, &subscriptions).unwrap();
 
     for event in subscriber.events() {
         match event.unwrap() {

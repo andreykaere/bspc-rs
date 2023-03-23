@@ -20,7 +20,7 @@ fn main() {
         Subscription::NodeRemove,
     ];
 
-    let mut subscriber = events::subscribe(&subscriptions, false, None).unwrap();
+    let mut subscriber = events::subscribe(false, None, &subscriptions).unwrap();
 
     for event in subscriber.events() {
         match event.unwrap() {
@@ -97,7 +97,7 @@ mod test {
             Subscription::NodeRemove,
         ];
 
-        let mut subscribers = subscribe(&subscriptions, false, None).unwrap();
+        let mut subscribers = subscribe(false, None, &subscriptions).unwrap();
 
         for event in subscribers.events() {
             match event.unwrap() {
