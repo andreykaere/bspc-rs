@@ -1,6 +1,5 @@
 use std::env;
-use std::io::Write;
-use std::io::{BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Write};
 use std::os::unix::net::UnixStream;
 
 use crate::errors::ReplyError;
@@ -27,7 +26,7 @@ fn locate_socket() -> String {
     }
 }
 
-pub(crate) fn connect() -> Result<UnixStream, ReplyError> {
+pub(crate) fn connect() -> io::Result<UnixStream> {
     let socket_path = locate_socket();
     let stream = UnixStream::connect(socket_path)?;
 
@@ -35,12 +34,12 @@ pub(crate) fn connect() -> Result<UnixStream, ReplyError> {
 }
 
 pub trait BspcCommunication {
-    fn send_message(&mut self, message: &str) -> Result<(), ReplyError>;
+    fn send_message(&mut self, message: &str) -> io::Result<()>;
     fn receive_message(&mut self) -> Result<Vec<String>, ReplyError>;
 }
 
 impl BspcCommunication for UnixStream {
-    fn send_message(&mut self, message: &str) -> Result<(), ReplyError> {
+    fn send_message(&mut self, message: &str) -> io::Result<()> {
         self.write_all(message.as_bytes())?;
         self.flush()?;
 
