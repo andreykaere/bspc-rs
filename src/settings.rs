@@ -7,6 +7,7 @@ use strum_macros::Display;
 use strum_macros::EnumString;
 
 use crate::errors::{ParseError, ReplyError};
+use crate::selectors::{DesktopSelector, MonitorSelector, NodeSelector};
 use crate::socket::{self, BspcCommunication};
 
 #[derive(Debug, Clone, Copy, EnumString, Display)]
@@ -673,4 +674,70 @@ pub fn set_merge_overlapping_monitors(value: bool) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
     conn.set_config_property("merge_overlapping_monitors", &value.to_string())
+}
+
+/// Sets `border_width` for nodes, that satisfy given conditions.
+pub fn set_border_width(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    todo!();
+}
+
+/// Sets `window_gap` for desktops, that satisfy given conditions.
+pub fn set_window_gap(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    todo!();
+}
+
+/// Sets `top_padding` for desktops/monitors, that satisfy given conditions.
+pub fn top_padding(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    todo!();
+}
+
+/// Sets `right_padding` for deskrights/monitors, that satisfy given conditions.
+pub fn right_padding(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    todo!();
+}
+
+/// Sets `bottom_padding` for deskbottoms/monitors, that satisfy given conditions.
+pub fn bottom_padding(
+    monitor_selector: Option<MonitorSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    todo!();
+}
+
+/// Sets `left_padding` for desklefts/monitors, that satisfy given conditions.
+pub fn left_padding(
+    monitor_selector: Option<MonitorSelector>,
+    deskleft_selector: Option<DesktopSelector>,
+    node_selector: Option<NodeSelector>,
+) -> Result<(), ReplyError> {
+    let mut conn = socket::connect()?;
+
+    todo!();
 }
