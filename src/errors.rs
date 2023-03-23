@@ -1,3 +1,7 @@
+//! Contains errors, that are used in this crate.
+//!
+//! It also has different conversions between differenet types of errors.
+
 use core::fmt;
 use std::error::Error;
 use std::io;

@@ -1,3 +1,7 @@
+//! This module is dedicated to various settings of bspwm. Its functions are
+//! equivalent to those, which are run by `bspc config <setting>` command in
+//! your shell.
+
 use std::string::ToString;
 use strum_macros::Display;
 use strum_macros::EnumString;

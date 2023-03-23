@@ -1,3 +1,13 @@
+//! This module implements selectors for `Node`, `Desktop` and `Monitor`.
+//!
+//! It works just like you would expect it from `bspc` command. However it
+//! offers you one cool feature: it checks if selector is valid at
+//! compile-time.
+//!
+//! However, in order for this to work, selector (represented by a string
+//! slice) is wrapped in struct, representing what kind of selector is that:
+//! node, dekstop or monitor.
+
 // use crate::properties::{CycleDir, Dir, Flag, Layer, SplitType, State};
 
 // pub struct MonitorSelector {}
@@ -57,18 +67,23 @@
 //     pub modifier: Option<NodeModifier>,
 // }
 
+/// String slice inside represents node selector.
 pub struct NodeSelector<'a>(pub &'a str);
+
+/// String slice inside represents desktop selector.
 pub struct DesktopSelector<'a>(pub &'a str);
+
+/// String slice inside represents monitor selector.
 pub struct MonitorSelector<'a>(pub &'a str);
 
 pub trait Selector {
-    /// Checks if given selector is valid
+    /// Checks if given selector is valid.
     fn is_valid(&self) -> bool;
 
-    /// Extracts selector from wrapper
+    /// Extracts selector from wrapper.
     fn extract(&self) -> &str;
 
-    /// Returns kind of selector, i.e. Node, Desktop or Monitor
+    /// Returns kind of selector, i.e. Node, Desktop or Monitor.
     fn kind(&self) -> &str;
 }
 
