@@ -681,6 +681,7 @@ pub fn set_border_width(
     monitor_selector: Option<MonitorSelector>,
     desktop_selector: Option<DesktopSelector>,
     node_selector: Option<NodeSelector>,
+    border_width: i32,
 ) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
@@ -691,7 +692,7 @@ pub fn set_border_width(
 pub fn set_window_gap(
     monitor_selector: Option<MonitorSelector>,
     desktop_selector: Option<DesktopSelector>,
-    node_selector: Option<NodeSelector>,
+    window_gap: i32,
 ) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
@@ -702,7 +703,7 @@ pub fn set_window_gap(
 pub fn top_padding(
     monitor_selector: Option<MonitorSelector>,
     desktop_selector: Option<DesktopSelector>,
-    node_selector: Option<NodeSelector>,
+    top_padding: i32,
 ) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
@@ -713,7 +714,7 @@ pub fn top_padding(
 pub fn right_padding(
     monitor_selector: Option<MonitorSelector>,
     desktop_selector: Option<DesktopSelector>,
-    node_selector: Option<NodeSelector>,
+    right_padding: i32,
 ) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
@@ -724,7 +725,7 @@ pub fn right_padding(
 pub fn bottom_padding(
     monitor_selector: Option<MonitorSelector>,
     desktop_selector: Option<DesktopSelector>,
-    node_selector: Option<NodeSelector>,
+    bottom_padding: i32,
 ) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
@@ -734,8 +735,8 @@ pub fn bottom_padding(
 /// Sets `left_padding` for desklefts/monitors, that satisfy given conditions.
 pub fn left_padding(
     monitor_selector: Option<MonitorSelector>,
-    deskleft_selector: Option<DesktopSelector>,
-    node_selector: Option<NodeSelector>,
+    desktop_selector: Option<DesktopSelector>,
+    left_padding: i32,
 ) -> Result<(), ReplyError> {
     let mut conn = socket::connect()?;
 
