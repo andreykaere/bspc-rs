@@ -63,6 +63,6 @@ fn main() {
 This library was started as a desire to have a native `bspc` support in Rust
 in [`ixwindow`](https://github.com/andreykaere/ixwindow) project. 
 
-Some small useful scripts/utilities that I use daily, written with help of
-this library, (basically ported from bash) can be found in `examples` directory.
+Some small useful scripts/utilities, that I use daily, written with the help of
+this library, (basically ported from bash version) can be found in `examples` directory.
 
