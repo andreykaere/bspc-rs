@@ -18,7 +18,7 @@ const SET_BORDER: [&str; 4] =
 const WINDOWS_FILE: &str = "/tmp/bordered_windows";
 
 // Width of the border to set (in pixels)
-const BORDER_WIDTH: u32 = 2;
+const BORDER_WIDTH: i32 = 2;
 
 fn main() {
     let subscriptions = [Subscription::NodeAdd, Subscription::NodeRemove];
@@ -41,5 +41,11 @@ fn main() {
 }
 
 fn create_border(id: Id) {
-    settings::set_border_width(None, None, Some(NodeSelector(&id.to_string())));
+    settings::set_border_width(
+        None,
+        None,
+        Some(NodeSelector(&id.to_string())),
+        BORDER_WIDTH,
+    )
+    .unwrap();
 }
