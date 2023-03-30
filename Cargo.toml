@@ -3,7 +3,7 @@ name = "bspc-rs"
 version = "0.1.1"
 authors = ["Andrey Vladimirov"]
 description = "Implementation of bspc in Rust"
-keywords = ["bspwm", "bspc", "window manager", "ipc"]
+keywords = ["bspwm", "bspc", "windowmanager", "ipc"]
 
 homepage = "https://github.com/andreykaere/bspc-rs"
 repository = "https://github.com/andreykaere/bspc-rs"
