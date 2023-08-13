@@ -18,11 +18,11 @@ pub struct FocusHistoryEntry {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct State {
-    focused_monitor_id: Id,
-    clients_count: u32,
-    monitors: Vec<Monitor>,
-    focus_history: Vec<FocusHistoryEntry>,
-    stacking_list: Vec<Id>
+    pub focused_monitor_id: Id,
+    pub clients_count: u32,
+    pub monitors: Vec<Monitor>,
+    pub focus_history: Vec<FocusHistoryEntry>,
+    pub stacking_list: Vec<Id>
 }
 
 /// Returns a dump of the current bspwm state <br>
