@@ -53,6 +53,7 @@ pub mod query;
 pub mod selectors;
 pub mod settings;
 pub mod tree;
+pub mod state;
 
 mod parser;
 mod socket;
