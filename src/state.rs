@@ -1,18 +1,18 @@
-//! This module is dedicated for the state dump of bspwm. It can be received by 
+//! This module is dedicated for the state dump of bspwm. It can be received by
 //! running `bspc wm -d` your shell.
 
-use serde::{Deserialize, Serialize};
 use crate::errors::ReplyError;
-use crate::Id;
-use crate::socket::{BspcCommunication, connect};
+use crate::socket::{connect, BspcCommunication};
 use crate::tree::Monitor;
+use crate::Id;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct FocusHistoryEntry {
     pub monitor_id: Id,
     pub desktop_id: Id,
-    pub node_id: Id
+    pub node_id: Id,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -22,7 +22,7 @@ pub struct State {
     pub clients_count: u32,
     pub monitors: Vec<Monitor>,
     pub focus_history: Vec<FocusHistoryEntry>,
-    pub stacking_list: Vec<Id>
+    pub stacking_list: Vec<Id>,
 }
 
 /// Returns a dump of the current bspwm state <br>
@@ -45,11 +45,7 @@ mod test {
 
     #[test]
     fn parse_state_dump() {
-        let state = Command::new("bspc")
-            .arg("wm")
-            .arg("-d")
-            .output()
-            .unwrap();
+        let state = Command::new("bspc").arg("wm").arg("-d").output().unwrap();
         let state = std::str::from_utf8(&state.stdout).unwrap();
 
         if state.len() > 1 {
