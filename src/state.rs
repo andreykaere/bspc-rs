@@ -2,9 +2,9 @@
 //! running `bspc wm -d` your shell.
 
 use crate::errors::ReplyError;
-use crate::socket::{connect, BspcCommunication};
+use crate::socket::BspcCommunication;
 use crate::tree::Monitor;
-use crate::Id;
+use crate::{socket, Id};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -19,6 +19,7 @@ pub struct FocusHistoryEntry {
 #[serde(rename_all = "camelCase")]
 pub struct State {
     pub focused_monitor_id: Id,
+    pub primary_monitor_id: Id,
     pub clients_count: u32,
     pub monitors: Vec<Monitor>,
     pub focus_history: Vec<FocusHistoryEntry>,
@@ -28,9 +29,8 @@ pub struct State {
 /// Returns a dump of the current bspwm state <br>
 /// Contains all monitors with their desktops (and window respectively)
 pub fn get_current_state() -> Result<State, ReplyError> {
-    let mut conn = connect()?;
-    let request = format!("wm\x00-d\x00");
-    conn.send_message(&request)?;
+    let mut conn = socket::connect()?;
+    conn.send_message("wm\x00-d\x00")?;
 
     let reply = conn.receive_message()?;
     let state: State = serde_json::from_str(&reply[0])?;
