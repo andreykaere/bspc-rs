@@ -12,3 +12,6 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Add CHANGELOG file for tracking relevant user-facing changes
 
+### Fixed
+
+- Fix `border_width` and `focused_node_id` fields missing in `Desktop` struct
