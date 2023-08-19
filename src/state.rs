@@ -19,7 +19,7 @@ pub struct FocusHistoryEntry {
 #[serde(rename_all = "camelCase")]
 pub struct State {
     pub focused_monitor_id: Id,
-    pub primary_monitor_id: Id,
+    pub primary_monitor_id: Option<Id>,
     pub clients_count: u32,
     pub monitors: Vec<Monitor>,
     pub focus_history: Vec<FocusHistoryEntry>,
