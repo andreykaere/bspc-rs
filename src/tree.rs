@@ -69,6 +69,8 @@ pub struct Desktop {
     pub layout: Layout,
     pub user_layout: Layout,
     pub window_gap: i32,
+    pub border_width: i32,
+    pub focused_node_id: Id,
     pub padding: Padding,
     pub root: Option<Node>,
 }
