@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use strum_macros::EnumString;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Rectangle {
     pub x: i32,
     pub y: i32,
@@ -9,7 +9,7 @@ pub struct Rectangle {
     pub height: i32,
 }
 
-#[derive(Debug, EnumString, Serialize, Deserialize)]
+#[derive(Debug, EnumString, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 #[strum(serialize_all = "snake_case")]
 pub enum Layout {
@@ -17,7 +17,7 @@ pub enum Layout {
     Monocle,
 }
 
-#[derive(Debug, EnumString, Serialize, Deserialize)]
+#[derive(Debug, EnumString, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 #[strum(serialize_all = "snake_case")]
 pub enum Dir {
@@ -27,7 +27,7 @@ pub enum Dir {
     East,
 }
 
-#[derive(Debug, EnumString, Serialize, Deserialize)]
+#[derive(Debug, EnumString, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 #[strum(serialize_all = "snake_case")]
 pub enum CycleDir {
@@ -35,28 +35,28 @@ pub enum CycleDir {
     Prev,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub enum SplitType {
     Vertical,
     Horizontal,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Presel {
     Dir(Dir),
     Ratio(f32),
     Cancel,
 }
 
-#[derive(Debug, EnumString)]
+#[derive(Debug, EnumString, Clone)]
 #[strum(serialize_all = "snake_case")]
 pub enum Stack {
     Below,
     Above,
 }
 
-#[derive(Debug, Serialize, Deserialize, EnumString)]
+#[derive(Debug, Serialize, Deserialize, EnumString, Clone)]
 #[serde(rename_all = "camelCase")]
 #[strum(serialize_all = "snake_case")]
 pub enum State {
@@ -66,14 +66,14 @@ pub enum State {
     Fullscreen,
 }
 
-#[derive(Debug, EnumString)]
+#[derive(Debug, EnumString, Clone)]
 #[strum(serialize_all = "snake_case")]
 pub enum Switch {
     On,
     Off,
 }
 
-#[derive(Debug, Serialize, Deserialize, EnumString)]
+#[derive(Debug, Serialize, Deserialize, EnumString, Clone)]
 #[serde(rename_all = "camelCase")]
 #[strum(serialize_all = "snake_case")]
 pub enum Flag {
@@ -85,7 +85,7 @@ pub enum Flag {
     Urgent,
 }
 
-#[derive(Debug, Serialize, Deserialize, EnumString)]
+#[derive(Debug, Serialize, Deserialize, EnumString, Clone)]
 #[serde(rename_all = "camelCase")]
 #[strum(serialize_all = "snake_case")]
 pub enum Layer {
@@ -94,7 +94,7 @@ pub enum Layer {
     Above,
 }
 
-#[derive(Debug, EnumString)]
+#[derive(Debug, EnumString, Clone)]
 #[strum(serialize_all = "snake_case")]
 pub enum Action {
     Move,
@@ -102,7 +102,7 @@ pub enum Action {
     ResizeSide,
 }
 
-#[derive(Debug, EnumString)]
+#[derive(Debug, EnumString, Clone)]
 #[strum(serialize_all = "snake_case")]
 pub enum ActionState {
     Begin,

@@ -52,6 +52,7 @@ pub mod properties;
 pub mod query;
 pub mod selectors;
 pub mod settings;
+pub mod state;
 pub mod tree;
 
 mod parser;

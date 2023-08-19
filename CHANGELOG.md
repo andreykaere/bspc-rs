@@ -11,6 +11,7 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 - Add CHANGELOG file for tracking relevant user-facing changes
+- Add `State` struct for representing bspwm state dump
 
 ### Fixed
 

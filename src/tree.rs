@@ -4,7 +4,7 @@ use crate::errors::ReplyError;
 use crate::properties::{Dir, Layer, Layout, Rectangle, SplitType, State};
 use crate::Id;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Padding {
     pub top: i32,
     pub right: i32,
@@ -12,7 +12,7 @@ pub struct Padding {
     pub left: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Client {
     pub class_name: String,
@@ -28,20 +28,20 @@ pub struct Client {
     pub floating_rectangle: Rectangle,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Constraints {
     pub min_width: i32,
     pub min_height: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct PreselNode {
     pub split_dir: Dir,
     pub split_ratio: f32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Node {
     pub id: Id,
@@ -61,7 +61,7 @@ pub struct Node {
     pub client: Option<Client>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Desktop {
     pub name: String,
@@ -75,7 +75,7 @@ pub struct Desktop {
     pub root: Option<Node>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Monitor {
     pub name: String,
